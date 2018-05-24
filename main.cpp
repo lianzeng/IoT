@@ -1,4 +1,4 @@
-//usage: sudo  ./OBD 
+//usage: sudo  ./OBD 2>&1 | tee result.txt;  or  ./OBD 1> result.txt;
 
 
 #include <stdio.h>
@@ -23,6 +23,7 @@ using std::string;
 
 extern int init_tty(int fd, const speed_t baudrate);
 extern void calcJ1939ParasOverCanBuffer(const CanBusBuffer& canBusBuffer);
+extern bool initObdDevice(const int ttyfd);
 
 Logger g_logger;
 CanBusBuffer g_canBusBuffer;
@@ -70,10 +71,29 @@ int waitObdActResp(int fd )
 }
 
 
+void printOnReceive(const int fd)
+{
+    static char buff[50];
+    memset(buff, 0, sizeof(buff));
+    int len = ::read(fd,buff,sizeof(buff)-1);
+    printf(" received %d bytes: %s \n",len, buff);
+}
+
+void readInputThenSendToObd(const int ifd, const int ofd)
+{
+    static char buff[30];
+    memset(buff, 0, sizeof(buff));
+    int len = ::read(ifd,buff,sizeof(buff)-1);
+    printf("user input %d bytes: %s \n",len, buff);
+    buff[len-1]='\r';//ELM327 cmd terminate with \r
+    if(::write(ofd, buff, len) != len)
+        printf("send cmd error!\n");
+}
+
 void fetchObdData(const int fd, const int timerfd)
 {//fetch obd data according to user cmd defined in obditem.txt
 
-    static bool dataFaultSwitch = 1;
+
     fd_set readset;
     int maxfdp1 = fd > timerfd ? (fd + 1) : (timerfd + 1);
     int result;
@@ -81,6 +101,7 @@ void fetchObdData(const int fd, const int timerfd)
         FD_ZERO(&readset);
         FD_SET(fd, &readset);
         FD_SET(timerfd, &readset);
+        FD_SET(STDIN_FILENO, &readset);//debug only,interactive input
         result = select(maxfdp1, &readset, NULL, NULL, NULL);
     }while(result == -1 && errno == EINTR);
 
@@ -98,12 +119,17 @@ void fetchObdData(const int fd, const int timerfd)
 
         if(FD_ISSET(fd, &readset))
         {
-            g_canBusBuffer.receiveData(fd);
+            printOnReceive(fd);
+            //g_canBusBuffer.receiveData(fd);//TODO:temporary comment out
             if(g_canBusBuffer.isFull())
             {
                 calcJ1939ParasOverCanBuffer(g_canBusBuffer);
                 g_canBusBuffer.clear();
             }
+        }
+        if(FD_ISSET(STDIN_FILENO, &readset))//debug
+        {
+            readInputThenSendToObd(STDIN_FILENO, fd);
         }
     }
     else if(result < 0)
@@ -117,29 +143,29 @@ void fetchObdData(const int fd, const int timerfd)
     }
 }
 
-int createTimerFd(const int fault_period)
+int createTimerFd(const int periodsec,const int nsec)
 {
-    int faultTimerfd = timerfd_create(CLOCK_MONOTONIC, TFD_NONBLOCK | TFD_CLOEXEC);
-    if(faultTimerfd < 0) {
+    int timerfd = timerfd_create(CLOCK_MONOTONIC, TFD_NONBLOCK | TFD_CLOEXEC);
+    if(timerfd < 0) {
         perror("timerfd_create failed");
         return -1;
     }
 
     struct itimerspec tmr;
-    tmr.it_value.tv_sec = fault_period;
-    tmr.it_value.tv_nsec = 0;
-    tmr.it_interval.tv_sec = fault_period;
-    tmr.it_interval.tv_nsec = 0;
-    timerfd_settime(faultTimerfd, 0, &tmr, NULL);
+    tmr.it_value.tv_sec = periodsec;
+    tmr.it_value.tv_nsec = nsec;
+    tmr.it_interval.tv_sec = periodsec;//periodically
+    tmr.it_interval.tv_nsec = nsec;
+    timerfd_settime(timerfd, 0, &tmr, NULL);
 
-    //printf("faultfd = %d \n",faultTimerfd);
-    return faultTimerfd;
+    //printf("faultfd = %d \n",timerfd);
+    return timerfd;
 }
 
 
 int startCanbusListen(int fd)
 {
-    const char* canFilterSettings = "STD0250000 000 000 000 000";//receive all canbus without filter
+    const char* canFilterSettings = "STD0250000 000 000 000 000";//only for taobao analysis tool.
     printf("config can filter: %s \n", canFilterSettings);
 
     int wrotebytes = write(fd, canFilterSettings, strlen(canFilterSettings));
@@ -155,15 +181,17 @@ int main(int argc, char* argv[])
     const char* logfile = (argc >1) ? argv[1] : NULL;
     g_logger = Logger(logfile);
 
-    const char* serialPort = "/dev/ttyUSB0";
+    const char* serialPort = "/dev/rfcomm0";
 
     const speed_t baudrate = 115200;
 
     int ttyfd = openSerialPort(serialPort, baudrate);//STDIN_FILENO;
     if(ttyfd < 0) return -1;
 
-    if(startCanbusListen(ttyfd) < 0) return -1;
-    int timerfd = createTimerFd(1);//period=1second to calulate 1939 params
+    if(! initObdDevice(ttyfd)) return -1;
+
+    //if(startCanbusListen(ttyfd) < 0) return -1;
+    int timerfd = createTimerFd(1,0);//period=1second to calulate 1939 params
 
 
     while(true)
