@@ -1,6 +1,8 @@
 # IoT
 internet of things
 
+开发环境： 在个人电脑上安装VirualBox虚拟机+Ubuntu，再安装arm交叉编译工具(cpu芯片厂商提供或者Yocto工程下载)，然后本地虚拟机写代码编译出arm-bin，再放到开发板上运行；
+
 1)usb to uart(seria port) need install driver: usbserial.ko && cp210x.ko, otherwise will not detect /dev/ttyUSB0;
 2)this develop is on virtualbox-linux system, could generate arm bin via a cross-compile-tool.
 
