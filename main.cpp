@@ -24,6 +24,8 @@ using std::string;
 extern int init_tty(int fd, const speed_t baudrate);
 extern void calcJ1939ParasOverCanBuffer(const CanBusBuffer& canBusBuffer);
 extern bool initObdDevice(const int ttyfd);
+extern void fetchObdData(const int ttyfd);
+
 
 Logger g_logger;
 CanBusBuffer g_canBusBuffer;
@@ -90,7 +92,7 @@ void readInputThenSendToObd(const int ifd, const int ofd)
         printf("send cmd error!\n");
 }
 
-void fetchObdData(const int fd, const int timerfd)
+void fetchJ1939Data(const int fd, const int timerfd)
 {//fetch obd data according to user cmd defined in obditem.txt
 
 
@@ -191,13 +193,13 @@ int main(int argc, char* argv[])
     if(! initObdDevice(ttyfd)) return -1;
 
     //if(startCanbusListen(ttyfd) < 0) return -1;
-    int timerfd = createTimerFd(1,0);//period=1second to calulate 1939 params
-
+    //int timerfd = createTimerFd(1,0);//period=1second to calulate 1939 params
 
     while(true)
     {
-        fetchObdData(ttyfd, timerfd);
-        g_logger.report(g_j1939Report);//report to IMPACT or file
+        fetchObdData(ttyfd);
+        //fetchJ1939Data(ttyfd, timerfd);//support interactive input
+        //g_logger.report(g_j1939Report);//report to IMPACT or file
     }
 
     //close(ttyfd);
