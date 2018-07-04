@@ -1,0 +1,56 @@
+
+http://emqtt.com/docs/v2/lwm2m.html  中文 MQTT 协议开源软件介绍，也涉及 lwm2m ，入门很好；
+
+http://www.openmobilealliance.org/release/LightweightM2M/  lwm2m协议下载
+
+LWM2M 的开源库:
+https://github.com/eclipse/wakaama   Wakaama (formerly liblwm2m) is an implementation of the Open Mobile Alliance's LightWeight M2M protocol，C语言实现, 提供了client example code，这个client可以和leshan的server在本地集成测试（client运行在virtualbox-linux系统, server运行在windowHost）, 非常方便，可以打开LOG宏，看C语言代码时会发现很多指针类型转换，编译命令: cmake  ./;  make ; 
+https://github.com/AVSystem/Anjay  C implementation of the LwM2M protocol on client side;It eases development of fully-featured LwM2M client applications by taking care of protocol details, allowing the user to focus on device-specific aspects.
+http://www.eclipse.org/leshan/  leshan provides libraries for develop LwM2M server and client in java. 
+https://github.com/OpenMobileAlliance/OMA-LWM2M-DevKit   : OMA LWM2M DevKit is an add-on for the Mozilla Firefox Web browser   
+
+LWM2M 是由 Open Mobile Alliance(OMA) 定义的一套适用于物联网的协议，功能包括：设备管理，通讯，固件升级，定位，接入控制，安全，；
+LWM2M 使用 CoAP 作为底层的传输协议，CoAP是基于 UDP 协议.  LWM2M 把设备上的数据抽象为 Object/instance/Resource， lwm2m client 需要和服务器保持心跳[lifetime]（周期性的向服务器发送注册消息）,如果心跳丢失则服务器会删除这个endpoint；
+有些resource可以有多个instance,比如resource=/3/0/6/是power source，表示供电来源，可以包含多个来源，这个resource就有多个Instance，对于自定义的resource就没必要搞多个Instance;
+
+MQTT是一个轻量的消息传输协议（发布订阅模式,消息中间件），专门针对低带宽和不稳定网络环境的物联网应用设计。
+MQTT官网: http://mqtt.org
+EMQ-LWM2M 插件：MQTT服务器的一个网关插件，支持LWM2M协议,使得MQTT客户端也可以访问支持 LWM2M 的设备.
+mqtt官网客户端库:  https://github.com/mqtt/mqtt.github.io/wiki/libraries 
+emqtt客户端库：     https://github.com/emqtt 
+
+https://github.com/eclipse/leshan  java实现的开源的lwm2m协议，包含server, client demo, 提供了在线lwm2m server( http://leshan.eclipse.org/  和 coap://leshan.eclipse.org:5683), 这个server上可以看到注册的lwm2mclient列表, 也可以在界面上对client进行observe/read/write/execute 操作， 可以用这个server来调试自己写的lwm2mclient程序；
+源码下载到本地，通过maven project导入eclipse,可以直接编译生成excutable .jar包，中途会自动下载依赖包；
+
+https://www.arm.com/files/event/2016_ATS_India_B4_Mikko_Saarnivala.pdf  <<Managing IoT devices with the LWM2M protocol - Arm.pdf>>这篇文章非常精彩的介绍了lwm2m架构；
+
+协议栈： Lwm2m--->coap--->(DTLS)--->udp--->ip;
+
+lwm2m中的DTLS层是加密层，是可选的。
+lwm2m里面的object从代码实现角度看可以认为是一个类class, 而instance就是一个对象实例，resource就是成员变量；lwm2m java实现是一个用面向对象编程的很好参考；
+
+lifetime: client用来和server端保持心跳，超时必须发起update request, 且要携带register id(这个id在register 时由server分配的);如果超时不发，则服务端会删除这个client;
+pmin/pmax:   pmin < 上报的间隔 < pmax; 这两个值是在observe request中发给client 的， 防止client上报太快或者太慢；当value没有变化，超过pmax必须上报，如果发生变化等pmin上报，lwm2m还支持门限上报；
+
+object: 
+a)Security(objecId=0), include:  lwm2m serverURI(ip&port), bootstrap server uri, short server id; 注意server ip是包含在security object, 不是在server object； Sercurity可以包含多个instance,每个instance对应1个server,也就是说1个client可以给多个server上报数据; 每个数据项可以有不同的服务器(列表)来关注它；
+b)Server(objectId=1), include: lifetime, pmin, pmax, short serverId;
+
+
+
+bootstrap: 分为好几种方案： a)device initiated bootstrap:  client先发1条bootstrap request消息给bootstrap server(这个地址是设备出厂写好的) ，然后bootstrap server告诉client 一个lwm2m server URL, 之后client 才向这个URL发起register request；   b)factory bootstrap ： client设备在出厂是时候就写好了lwm2m server(ip or DNS ?);
+
+关于bootstrap的精彩文章参考:   https://medium.com/@vrmvrm/device-key-distribution-with-lightweight-m2m-36cdc12e5711 ,  有动画演示；
+
+lwm2m<OMA-TS-LightweightM2M-V1_0-20170208-A.pdf>, <OMA-ETS-LightweightM2M-V1_0-20160829-C.pdf>是测试Case描述;
+
+
+集成测试：启动server:   java -jar leshan-server-demo-1.0.0-SNAPSHOT-jar-with-dependencies.jar -lh 10.140.56.221 (用本机的公网ip)
+java -jar leshan-client-demo-1.0.0-SNAPSHOT-jar-with-dependencies.jar -u 10.140.56.221
+leshan serve demo运行后，其实起了2个server,一个是lwm2m server(连接lwm2m client), 一个是web server(连接浏览器)，上述命令设置的是lwm2mServerip,设置ip后可以跨PC测试;
+leshanserver启动后，还可以在浏览器界面捕获CoAPMessage,可以看到Coap msg payload,对于集成测试非常方便；
+lwm2m协议支持的数据序列化格式有 Json, TLV, 其中JSON是字符串，TLV是二进制，最好是用JSON，因为JSON包含了数据类型，方便解析和调测；
+
+C语言源码阅读： 
+struct _lwm2m_data_t 是个递归的数据结构，正好反映了object---instance---resource的1对多关系；
+
