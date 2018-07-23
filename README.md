@@ -11,3 +11,4 @@ internet of things
 3.创建周期定时器:  fd= timerfd_create(); 然后加入select()，外面一层while循环，非常好用，不要用select的time参数充当定时器，因为会被其它的fd打断；
 4.可交互的程序:  FD_SET(STDIN_FILENO, &readset); + select(maxfdp1, &readset, NULL, NULL, NULL); 这样用户可以输入指令，和程序交互，即便用户不输入，也不影响程序功能；
 5.单机内进程间通信IPC用unix socket DGram, 数据格式用JSON;
+6.蓝牙自动配对可以用 C程序 + ShellScript, C程序用来周期性的启动ShellScript扫描蓝牙device，Scipt脚本用expect来实现bluetoothctl的自动cmd输入。
