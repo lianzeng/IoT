@@ -58,7 +58,7 @@ int main() {
     const int period = 1*minute;
     int timerfd = createTimerFd(period, 0);//10s for lab test, 1minutes for field test.
 
-    callScript();
+    
 
     //no matter obd is connected or not, periodically detect and try connect;
     //even if obd already connected, has no side effect;
