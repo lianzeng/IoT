@@ -1,0 +1,4 @@
+
+if CPlusPlusCallShell.out teminated when OBD is running,  OBD is albe to keep working, and get data from car;
+once OBD is also terminated, /dev/rfcomm0 will disappear;
+

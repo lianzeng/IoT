@@ -28,7 +28,9 @@ do
 
 echo "try $i times connect OBD"
 
+
 #step1: pair, need input obd device name "V-LINK" in future instead of address
+#note: must use absolute path for script in target env. otherwise can't found the bluePair.sh
 ./bluePair.sh $devAddr 
 
 sleep 1

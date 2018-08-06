@@ -34,7 +34,7 @@ int createTimerFd(const int sec,const int nsec)
 
 void callScript()
 {
-    int status = system("./bluetooth_auto.sh"); //will block until script finished
+    int status = system("/opt/lwm2m/bluetooth_auto.sh"); //use script absolute path instead of relative path, system() will block until script finished
 
     // status is not the actual return status
     // first check if there were errors reported by system()
@@ -58,7 +58,6 @@ int main() {
     const int period = 1*minute;
     int timerfd = createTimerFd(period, 0);//10s for lab test, 1minutes for field test.
 
-    
 
     //no matter obd is connected or not, periodically detect and try connect;
     //even if obd already connected, has no side effect;
