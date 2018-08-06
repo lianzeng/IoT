@@ -12,3 +12,5 @@ internet of things
 4.可交互的程序:  FD_SET(STDIN_FILENO, &readset); + select(maxfdp1, &readset, NULL, NULL, NULL); 这样用户可以输入指令，和程序交互，即便用户不输入，也不影响程序功能；
 5.单机内进程间通信IPC用unix socket DGram, 数据格式用JSON;
 6.蓝牙自动配对可以用 C程序 + ShellScript, C程序用来周期性的启动ShellScript扫描蓝牙device，Scipt脚本用expect来实现bluetoothctl的自动cmd输入。
+7.嵌入式系统中的软件都使用微服务的方式开发，每个服务是一个独立的进程，都是Daemon进程，使用IPC(unix socket)通信，每个进程只做1件事，比如蓝牙自动配对服务，固件程序下载升级服务， lwm2mclient上报服务， OBD汽车数据采集服务, 秒秒测温/GPS测量/湿度测量服务；
+8.网关使用Kura(开源)来管理各种外设和驱动模块，并提供UI交互，OSGI插件化机制；
