@@ -1,0 +1,131 @@
+https://github.com/yougukepp/j1939  j1939模拟器，剩余油量
+新能源电动厢式物流运输车全流程智能车队管理技术及价值 
+
+#define CLUTCH_PGN              (65265)
+#define DISTANCE_PGN            (62977)
+#define SPEED_PGN               (62980)
+#define OIL_PGN                 (62978)
+#define OIL_USED_PGN            (62981)
+#define OIL_PRESS_PGN           (62979)
+
+读取汽车的VIN code(send data to ECU 020902) : 
+ https://github.com/carloop/app-vin-reader/blob/master/src/app-vin-reader.cpp  https://community.carloop.io/t/how-to-request-vin/153/4
+
+https://blog.csdn.net/w7822055/article/details/23854901  OBD协议里程获取办法
+http://www.threadcn.com/download/  深圳速锐德OBD资料下载
+http://blog.sina.com.cn/s/articlelist_3247718332_0_1.html
+
+
+千万注意，在打开Torque Pro版本前，必须先通过手机的蓝牙来扫描发现V-Link并配对,然后才打开Torque APP,这样在设定里面才会出现V-Link,然后选择就可以连接读取数据了；
+V-LINK: 红灯是电源，绿灯是蓝牙配对成功， 蓝灯闪烁才是在传输OBD数据；
+
+监听所有消息，很容易iCar数据就满了,BUFFER FULL;
+
+用USBCANPro给iCar发j1939的数据，icar可以成功接收到，并识别j1939指令;
+iCar2 BT3.0 车况检测大师(nsnobd:123456) , buletooth name: VLINK(00:1D:A5:1D:0A:49;   pinCode:1234)
+miniOBD(ELM327) pwd: 111111;  ELM327 OBDII: 00:1D:A5:68:98:8B
+iCAR蓝牙和PC蓝牙连接后，会一直闪，即使不读取汽车数据，过一段时间会自动断开蓝牙连接；
+
+康明斯 J1939 , OBD不支持柴油车Diesel vechicles， 支持汽油车gasoline cars.
+http://t5834668472669472.5858.com/    杭州冠通汽车修理有限公司  , 服务热线： 13186969732, 货车维修；
+
+ELM Software Version V2.1,hardware Version V1.5
+
+
+要找柴油车，东风天龙和福田大货车都是柴油车；这次找了个汽油车，协议是ISO15765-4(29bit,250K)
+先用手机连接OBD看下是否是OBD协议(18DAF110)，然后再看是否要用j1939解析；
+
+卡车现场最重要的是可以打印出接收到的J1939数据, 然后再根据数据格式调整代码中的数据偏移量。
+程序启动时，容易校验resp失败，这点需要加强；
+如果程序失败，提示/dev/rfcomm0 failed,那要先看下/dev/rfcomm0文件是否存在，然后用管理员权限运行: sudo ./obd.out
+在SensorGW上面测试，先看ELM327有没有和SensorGW蓝牙连接成功，如果没有连接，则程序在第1个指令ATI就会失败，然后看汽车有没有熄火，
+如果汽车熄火，ELM327连接不上汽车，则在指令"0100"会失败，出现“initial OBD fail at: 0100, received:UNABLE TO CONNECT”;
+尝试过在ISO15765协议上替换报文内容为1939，发现ELM327连接不上汽车，失败在"0100"这步；
+如果汽车模拟器在和ELM327通信的时候切换协议，ELM327会收到invalid data: NO DATA,这时要重启进程；
+由于淘宝设备和ELM327设备输出格式有些差异，代码中有些数据偏移需要调整；
+先用bluetoothctl&&rfcomm 连接蓝牙： power on,agent on, default-agent, scan on,pair;rfcommon connect 0 00:1D:A5:68:98:8B 1;
+连接后，程序启动执行指令： ATI,ATE0,ATS0,ATH1,ATAT1,ATSP0,0100,ATDP,010C, ATSPA(1939)
+
+ELM327 OBDII: 00:1D:A5:68:98:8B ;spp serial port com7,  pin code:1234 用pc上的PCMSCAN软件可以连接ELM327，并采集到数据（发动机转速）;
+风险： ELM327是盗版的，正版要20$一个，正版支持j1939协议，盗版的不支持1939，也不支持可编程参数，不知道在卡车上能否拿到CAN数据？？拿不到的话就要重新考虑方案了；
+尝试下在Virtualbox虚拟机上使用PC蓝牙连接obd-ELM327 ???
+ELM327 对 j1939不支持, 盗版的，命令都返回???
+ELM327会进入休眠？
+
+
+程序测试场景：汽车从熄火到点火，点火到熄火，OBD设备突然拔掉了，OBD设备插上了；
+汽车熄火，ELM327自动进入休眠状态，读不到数据，返回(NO DATA), 需要重新 reset 或者重启进程 ！！
+
+ISO15765_4Setting():send obd data; 
+D:\IoT\OBDv2.3.2\second\v1.1\OBD2Final2.3.3\Proj\Output\OBDSim.hex
+
+
+
+
+
+https://www.elmelectronics.com/help/obd/tips/ 这里明确提到了ELM327的自动搜索模式(SP0)不支持j1939, 只能明确设置ATSPA来支持;通过protocolB/C支持监听非OBD的CAN总线，但是尝试失败；
+The J1939 protocol is not normally part of the automatic search group, unless you have changed the value of PP 07. If you are experimenting, the best way to enable protocol A is to use the Set Protocol command (ie AT SP A);
+OBDSimulator:comboBox3_SelectedIndexChanged() isops = "AT+ISO14230-4ADDR"; 改成自动吐数据；
+
+只要汽车点火，执行下面命令，就可以自动检测出OBD协议(不能检测j1939),绿灯闪烁说明是在ELM327在接收数据
+ELM327cmd:  ATI,ATZ,ATE0(must,echo off),ATM1,ATL0(linefeed),ATS0(NoSpace),ATH1(must,canId),ATAT1(must),ATSP0,
+0100(如果收到"NO DATA"说明熄火了),ATDP,ATDPN,ATDP,010C,010D,.. 命令不区分大小写，不区分空格，执行成功会返回ok;
+注意：在代码中所有的指令必须加入'\r'才行，比如:"ATI\r" 因为ELM327的命令结束符是carrige return='\r';否则会返回?
+
+
+ATZ or ATWS: reset ELM327, ATWS is faster than ATZ
+ATDP: 查询当前协议
+ATSP0: protocol automatic search
+
+AT ST FF: set a longer timeout;
+ATSPAA: first try j1939, if failed, than automatic search;
+ATTPAA: better than ATSPAA;
+ATCS: show can rx/tx bytes counter, no use!!
+ATD: reset all to defaults
+ATCF hhhhhhhh: can id filter
+ATCM hhhhhhhh: can id mask, if set to 00000000,then receive all can data;
+
+其实ELM327会接收所有的来自CAN总线的数据，然后根据用户和Firmware的设置来过滤数据；
+J1939 cmd: page11,page20; 协议切换后，断电也可以保存
+"ATI,ATE0,ATS0,ATH1,ATAT1,ATSPA,ATDP,ATD1,ATJHF0","ATMPhhhh"
+
+ATSPA: set ELM327 to j1939 protocol only
+ATMA: 监听所有消息; 这条指令本身不会有resp,这条指令会受到其它滤波指令的影响（ATCF,ATCM,ATCRA）; 进入监听模式后，才会收到1939数据，如果这时收到任何上位机指令就立刻STOPPED;这条指令如果不设置滤波的话，很容易导致ELM327 Buffer FULL;
+ATD1: turn on the DLC, (DLC=8), prefer to :ATD1
+ATDM1:page17,  monitor j1939 dm1 msg; 根据1939协议，ECU会周期性的广播故障码;
+ATDM2: 诊断，j1939-73 诊断协议;
+ATMPFECB:  monitor DM2 message
+ATJE:default on, ELM327会reverse byte order for PGN, 实际测试 ATJE 和 ATJS 效果一样?
+ATJS: keep the raw j1939 sae data format(little-endian byte order), prefer to use ATJS;
+ATJHF0: 保持原始的1939 header格式;
+ATCRA18FECAXX: 设置感兴趣的CANID,PGN=18FECA,XX是地址，不关心，设置完这个命令后还得设置ATMA才能收到数据;这个效果等同于ATMP;
+ATCRA: 还原滤波设置，也就是不滤波，接收所有消息;
+ATMP hhhh : eg:"ATMPFEF1" means monitor PGN=18FEF1 and 0CFEF1; 带滤波的监听,这条指令是专门针对J1939协议的,会立即进入监听模式，指令本身不会返回RESP;直到用户发送指令才停止监听；
+ATMP hhhh n : 实际测试效果和ATMP hhhh一样,n没有效果;
+
+
+AT PP FF OFF:turn off all program params,set to default value;
+modify baudrate( pp params summary page70-74):
+AT pp 2f sv 02 设置 2f=user protocol C baudrate,02=500/2=250kbps
+AT pp 2f on
+AT SP C 通过 ATDP 查询，发现修改不了波特率，估计是盗版的原因;
+
+连线：OBD模拟器(点火,250k,29bit) + ELM327蓝牙(pair with EdgeGW) + USBCANPRO, 这样ELM327和模拟器的所有通信都可以被USBCANPRO捕获; 
+ELM327v2.1收到的指令如果是AT开头（必须以"\r"结尾），则会执行动作(只有'\r'表示重复上1条命令)，如果返回? 说明不支持指令， 如果指令是16进制数字则透传给汽车；
+Functions: 
+* Read diagnostic trouble codes
+* Engine RPM 
+* Calculated Load Value 
+* Coolant Temperature 
+* Fuel System Status 
+* Vehicle Speed 
+* Short Term Fuel Trim 
+* Long Term Fuel Trim 
+* Intake Manifold Pressure 
+* Timing Advance 
+* Intake Air Temperature 
+* Air Flow Rate 
+* Absolute Throttle Position 
+* Oxygen sensor voltages/associated short term fuel trims 
+* Fuel System status 
+* Fuel Pressure 
