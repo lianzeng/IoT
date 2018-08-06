@@ -3,7 +3,7 @@
 Created on Wed Apr 25 13:49:42 2018
 
 convert XiAn data to CanPro file format
-
+eg: foton.txt ---》 foton_canpro.list
 @author: lianzeng
 """
 
@@ -39,7 +39,7 @@ if __name__ == "__main__" :
     tfile = open("foton_canpro.list",'w')
     tfile.write('<SendList m_dwCycles="1">'+'\n')
     
-    with open("foton.txt") as ifile:
+    with open("foton.txt") as ifile:#with open("IVECO.txt",encoding="utf8") as iflie:
         for line in ifile:
             newline = convert(line)
             if newline:

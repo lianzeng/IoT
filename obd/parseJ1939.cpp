@@ -11,9 +11,11 @@
 #include "reportJ1939.hpp"
 #include "logger.hpp"
 
+#define CAN_FRAME_LEN 25  //TODO:taobao: "18FEF100 8 FC FF FE 04 00 00 00 00"; ELM327:18FEF1008XXXXXXXXXXXXXXXX = 25bytes
+
 using std::string;
 
-extern J1939Reports g_j1939Report;
+extern ObdDataInfo g_obdDataFetched;
 extern Logger g_logger;
 
 inline int a2hex(char c)
@@ -34,10 +36,10 @@ int byte2hex(char H, char L)
     return ((a2hex(H) << 4) + a2hex(L)) & 0xFF;
 }
 
-int byteIndex(const string& d, int i)
+int byteIndex(const string& d, int i)//ELM327: no space, taobao: has space
 {
-    assert(1<= i && i <= 8);
-    return byte2hex(d[8+i*3],d[9+i*3]);
+    assert(1<= i && i <= 8);//byte from 1 according to 1939 protocol
+    return byte2hex(d[7+i*2],d[8+i*2]);
 }
 
 
@@ -71,7 +73,8 @@ void calcVehicleSpeed(const string &datas)
     int b3 = byteIndex(datas,3);
     float vehicleSpeed = ((b3<<8)+ b2)/256.0f;
     vehicleSpeed = limit(vehicleSpeed, 0, 250.996);
-    g_j1939Report.vehicleSpeed = vehicleSpeed;
+    g_obdDataFetched.vehicleSpeed = vehicleSpeed;
+    strcpy(g_obdDataFetched.state , (vehicleSpeed > 0) ? "running" : "stopped");
     printf(" vehicleSpeed=%.3f km/h \n", vehicleSpeed);
 }
 
@@ -92,18 +95,16 @@ void brakeSwitch(char byte)
 
 void cruiseControlVehicleSpeed(const string &datas)
 {
-
-    const int CAN_ID_LEN = 8;//29bit canid has 8 ascii char.
-
-    int DLC = a2hex(datas[9]);//TODO:data length,adapt for ELM327
-
-    if (datas.find(' ') != CAN_ID_LEN || DLC != 8 )
+#if 0
+    //const int CAN_ID_LEN = 8;//29bit canid has 8 ascii char. eg: 60FEF1008XXXXXXXXXXXXXXXX
+    int DLC = a2hex(datas[8]);//TODO:data length,adapt for ELM327
+    if (DLC != 8 )
     {
-        printf("\n discard \n");//not 29bit canid or payload !=8 bytes.
+        printf("\n DLC wrong \n");//not 29bit canid or payload !=8 bytes.
         return;
     }
 
-#if 0
+
     int PF = (a2hex(datas[2]) << 4) + a2hex(datas[3]);
     int PS = (a2hex(datas[4]) << 4) + a2hex(datas[5]);
     int PGN = (PF < 240) ? PF : ((PF << 8) + PS);
@@ -114,10 +115,10 @@ void cruiseControlVehicleSpeed(const string &datas)
         return;
     }
 #endif
-    int b1 = byteIndex(datas,1);
-    parkingBrakeSwitch(b1);
-    int b4 = byteIndex(datas,4);
-    brakeSwitch(b4);
+    //int b1 = byteIndex(datas,1);
+    //parkingBrakeSwitch(b1);
+    //int b4 = byteIndex(datas,4);
+    //brakeSwitch(b4);
     calcVehicleSpeed(datas);
 }
 
@@ -125,29 +126,20 @@ void cruiseControlVehicleSpeed(const string &datas)
 
 void calcEngineSpeed(const string &datas)
 {
-    if (a2hex(datas[9]) != 8 )
-    {
-        printf("\n discard \n");
-        return;
-    }
     int b4 = byteIndex(datas,4);
     int b5 = byteIndex(datas,5);
     float espeed = ((b5<<8)+b4)*0.125f;
     espeed = limit(espeed,0,8031.875);
-    g_j1939Report.engSpeed = espeed;
+    g_obdDataFetched.engSpeed = espeed;
     printf(" engineSpeed=%.3f rpm \n", espeed);
 }
 
 void calcEngineLoad(const string &datas)
 {
-    if (a2hex(datas[9]) != 8 )
-    {
-        printf("\n discard \n");
-        return;
-    }
+
     int b3 = byteIndex(datas, 3);
     int eload = limit(b3,0,125);
-    g_j1939Report.engLoad = eload;
+    g_obdDataFetched.engLoad = eload;
     printf(" engine load= %d%%\n", eload);
 }
 
@@ -255,6 +247,21 @@ void calcEngFuelRate(const string& datas)
     printf("EngFuelRate=%.3f L/h\n",fuelR);
 }
 
+std::string extractCanFrame(const std::string& srcData, const std::string& canId, int& startPos)
+{
+    if(startPos < 0 || startPos >= srcData.size()) return "";
+    size_t matchPos = srcData.find(canId,startPos);
+    if(matchPos != std::string::npos && matchPos < srcData.size())
+    {
+        startPos = (matchPos + CAN_FRAME_LEN);//update startPos for next round extract
+        int validBytes = srcData.size() - matchPos;
+        validBytes = (validBytes < CAN_FRAME_LEN) ? validBytes : CAN_FRAME_LEN;
+        return std::string(&srcData[matchPos],validBytes);
+    }
+    else
+        return "";
+}
+
 void calcJ1939ParasOverCanBuffer(const CanBusBuffer& canBusBuffer)
 {//this func is called periodically or when buffer is full;
 
@@ -262,24 +269,24 @@ void calcJ1939ParasOverCanBuffer(const CanBusBuffer& canBusBuffer)
     //18 indicate priority=6
     static const Formula1939 formula1939[] =
      {
-        {"18FEF100",cruiseControlVehicleSpeed},//SPN84,PGN65265,SAE-j1939-71,"CCVS" 车速，刹车
-        {"0CF00400",calcEngineSpeed}, //SPN190,PGN61444,"EEC1" 发动机转速RPM，
-        {"0CF00300",calcEngineLoad}, //SPN92,PGN61443,"EEC2" 发动机负荷，
-        {"18FEC100",calcDistance}, //SPN917,SPN918,PGN=65217,"VDHR" 里程，
-        {"18FEEE00",calcEngineTemperature},//SPN110,SPN174,PGN=65262,"ET1"冷却液温度，发动机燃油温度
-        {"18FEF500",calcAirInletTemperature},//SPN172,PGN65269,"AMB"进气温度，
-        {"18FEF700",calcBatteryVoltage},//SPN158,PGN65271,"VEP1"电瓶电压，
-        {"0CF00A00",calcEngineInletAir},//SPN132,PGN61450,"EGF1"发动机进气流量，
-        {"18FECA00",countFaultNum},//diagnose message,"DM1"故障码
-        {"18FEE700",calcVehicleHours},//SPN246,PGN65255 开车时间
-        {"18FEE900",calcFuelConsumption},//SPN182,SPN250,PGN65257油耗
-        {"18FEF200",calcEngFuelRate}, //SPN183,PGN65266 燃油率
+        {NULL,"18FEF100",cruiseControlVehicleSpeed},//SPN84,PGN65265,SAE-j1939-71,"CCVS" 车速，刹车
+        {NULL,"0CF00400",calcEngineSpeed}, //SPN190,PGN61444,"EEC1" 发动机转速RPM，
+        {NULL,"0CF00300",calcEngineLoad}, //SPN92,PGN61443,"EEC2" 发动机负荷，
+        {NULL,"18FECA00",countFaultNum},//diagnose message,"DM1"故障码
+        //{"18FEC100",calcDistance}, //SPN917,SPN918,PGN=65217,"VDHR" 里程，
+        //{"18FEEE00",calcEngineTemperature},//SPN110,SPN174,PGN=65262,"ET1"冷却液温度，发动机燃油温度
+        //{"18FEF500",calcAirInletTemperature},//SPN172,PGN65269,"AMB"进气温度，
+        //{"18FEF700",calcBatteryVoltage},//SPN158,PGN65271,"VEP1"电瓶电压，
+        //{"0CF00A00",calcEngineInletAir},//SPN132,PGN61450,"EGF1"发动机进气流量，
+        //{"18FEE700",calcVehicleHours},//SPN246,PGN65255 开车时间
+        //{"18FEE900",calcFuelConsumption},//SPN182,SPN250,PGN65257油耗
+        //{"18FEF200",calcEngFuelRate}, //SPN183,PGN65266 燃油率
 
      };
 
     static int frameIdx = 0;
 
-    const int max_sample_per_second = 10;
+    const int max_sample_per_second = 1;
 
     if(canBusBuffer.empty()) return;//no need to calculate if no canbus received
     g_logger.setUpdateFlag();
@@ -289,14 +296,68 @@ void calcJ1939ParasOverCanBuffer(const CanBusBuffer& canBusBuffer)
         int startPos = 0;
         for(int count = 0; count < max_sample_per_second;  count++)
         {
-            string oneFrame = canBusBuffer.extractCanFrame(formula1939[i].canId, startPos);
+            string oneFrame = extractCanFrame(canBusBuffer.data(), formula1939[i].canId, startPos);
             if(oneFrame.size() == CAN_FRAME_LEN )
             {
                 printf(" %d: %s \n",frameIdx++,oneFrame.data());
-                formula1939[i].formula(oneFrame);
+                if (a2hex(oneFrame[8]) == 8 ) //check DLC
+                    formula1939[i].formula(oneFrame);
+                else
+                    printf("\n wrong DLC \n");
+
             }
             else
                 break;
         }
     }
+}
+
+
+extern std::string sendCmdAndWaitRsp(const int timerfd,const int fd, const char* cmd);
+
+
+
+
+void fetchJ1939Data_auto(const int ttyfd, const int timerfd)//cmd--resp
+{
+    static int frameIdx = 0;
+    const int max_sample_per_second = 1;
+
+    static const Formula1939 itemsList[] =
+    {
+
+            {"ATMPFEF1\r","18FEF100",cruiseControlVehicleSpeed},  //vechile speed
+            {"ATMPF004\r","0CF00400",calcEngineSpeed}, //RPM
+            {"ATMPFEEE\r","18FEEE00",calcEngineTemperature}, //engCoolTemp
+            //{"ATMPFEC1\r","18FEC100",calcDistance}, //distance after clean fault
+
+    };
+
+
+    for(int i= 0; i< sizeof(itemsList)/sizeof(itemsList[0]); i++)
+    {
+        const char* payload = NULL;
+        int startPos = 0;
+
+        std::string resp = sendCmdAndWaitRsp(timerfd,ttyfd,itemsList[i].cmd);
+
+        for(int count = 0; count < max_sample_per_second;  count++)
+        {
+            string oneFrame = extractCanFrame(resp, itemsList[i].canId, startPos);
+            if(oneFrame.size() == CAN_FRAME_LEN )
+            {
+                printf(" %d: %s \n",frameIdx++,oneFrame.data());
+                if (a2hex(oneFrame[8]) == 8 ) //check DLC
+                    itemsList[i].formula(oneFrame);
+                else
+                    printf("\n wrong DLC \n");
+
+            }
+
+        }
+
+        sendCmdAndWaitRsp(timerfd,ttyfd,"a\r");//send any char to let icar exit monitor temporary, so can enter monitor next round
+
+    }
+
 }

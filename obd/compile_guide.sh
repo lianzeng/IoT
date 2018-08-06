@@ -1,4 +1,4 @@
-#source this .sh to generate arm-OBD.out
+#source this .sh 
 source  /opt/fsl-imx-x11/4.9.11-1.0.0/environment-setup-cortexa9hf-neon-poky-linux-gnueabi 
 
 #echo $CC , then output :

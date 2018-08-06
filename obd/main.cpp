@@ -16,7 +16,8 @@
 #include "canBuffer.hpp"
 #include "logger.hpp"
 #include "reportJ1939.hpp"
-
+#include <sys/shm.h>
+#include "shareMemData.h"
 
 using std::string;
 //typedef unsigned int  speed_t;
@@ -24,12 +25,15 @@ using std::string;
 extern int init_tty(int fd, const speed_t baudrate);
 extern void calcJ1939ParasOverCanBuffer(const CanBusBuffer& canBusBuffer);
 extern bool initObdDevice(const int ttyfd);
-extern void fetchObdData(const int ttyfd);
-
+extern void fetchObdData(const int ttyfd, const int timerfd);
+extern bool initiCarDevice_J1939(const int ttyfd);
+extern void fetchJ1939Data_auto(const int ttyfd, const int timerfd);
+extern int createUnixSocket();
 
 Logger g_logger;
 CanBusBuffer g_canBusBuffer;
-J1939Reports g_j1939Report = {0};
+ObdDataInfo g_obdDataFetched = {0};//report to lwm2m
+int    g_obdFd = -1;
 
 int openSerialPort(const char* portName, const speed_t baudrate)
 {
@@ -38,7 +42,6 @@ int openSerialPort(const char* portName, const speed_t baudrate)
     if(fd < 0)
     {
         printf("open %s failed!\n",portName);
-        printf("usage: sudo ./OBD  \n");
         return -1;
     }
 
@@ -68,7 +71,7 @@ int waitObdActResp(int fd )
 
         }
     }
-
+    printf("can tool resp ok! \n");
     return 0;
 }
 
@@ -92,7 +95,34 @@ void readInputThenSendToObd(const int ifd, const int ofd)
         printf("send cmd error!\n");
 }
 
-void fetchJ1939Data(const int fd, const int timerfd)
+void* createShareMemory(key_t k, size_t size)
+{
+    //创建共享内存
+    int shmid = shmget(k, size, 0666|IPC_CREAT);
+    if(shmid == -1)
+    {
+        fprintf(stderr, "shmget failed\n");
+        exit(EXIT_FAILURE);
+    }
+    //将共享内存连接到当前进程的地址空间
+    void* shm = shmat(shmid, 0, 0);
+    if(shm == (void*)-1)
+    {
+        fprintf(stderr, "shmat failed\n");
+        exit(EXIT_FAILURE);
+    }
+    printf("\n shareMemory attached at %p \n", shm);
+    memset(shm, 0, size);
+    return shm;
+}
+
+
+int g_fdIpc = -1;
+
+
+
+
+void fetchJ1939Data_interactive(const int fd, const int timerfd)
 {//fetch obd data according to user cmd defined in obditem.txt
 
 
@@ -121,8 +151,8 @@ void fetchJ1939Data(const int fd, const int timerfd)
 
         if(FD_ISSET(fd, &readset))
         {
-            printOnReceive(fd);
-            //g_canBusBuffer.receiveData(fd);//TODO:temporary comment out
+            //printOnReceive(fd);
+            g_canBusBuffer.receiveData(fd);//TODO:temporary comment out
             if(g_canBusBuffer.isFull())
             {
                 calcJ1939ParasOverCanBuffer(g_canBusBuffer);
@@ -178,32 +208,133 @@ int startCanbusListen(int fd)
     return waitObdActResp(fd);
 }
 
-int main(int argc, char* argv[])
-{
-    const char* logfile = (argc >1) ? argv[1] : NULL;
-    g_logger = Logger(logfile);
 
+
+
+bool tryInitialObdDevice(const int ttyfd)
+{
+    const int MAX_TRY_NUM = 3;
+    for(int i = 0; i<MAX_TRY_NUM; i++)
+    {
+        if(initObdDevice(ttyfd)) //initiCarDevice_J1939
+            return true;
+    }
+    return false;
+}
+
+int tryOpenAndInitialObd()
+{
+    const speed_t baudrate = 115200; //obd  device baud rate
     const char* serialPort = "/dev/rfcomm0";
 
-    const speed_t baudrate = 115200;
+    const int ttyfd = openSerialPort(serialPort, baudrate);//STDIN_FILENO;
+    if(ttyfd > 0)//obd device is ready
+    {
+        printf("obd is ready \n");
+        if(tryInitialObdDevice(ttyfd)) //initiCarDevice_J1939(ttyfd)
+        {
+            return ttyfd;
+        }
+        else
+        {
+            printf("error:obd initial failure after multiple try\n");//should not run to this branch in most case
+            return -1;
+        }
+    }
+    else {
+        printf("obd is not ready.\n");
+        return -1;
+    }
+}
 
-    int ttyfd = openSerialPort(serialPort, baudrate);//STDIN_FILENO;
-    if(ttyfd < 0) return -1;
+bool checkObdStatus(const int ttyfd)
+{
+    const char* dummyCmd = "010C\r";//"010C" is for 15765, j1939 may need another cmd
+    if(::write(ttyfd, dummyCmd,  strlen(dummyCmd)) != strlen(dummyCmd))//send dummyCmd to check if obd is able to write,if can't write,need re-connect blue
+    {
+        printf("obd disable now !\n");
+        return false;
+    }
+    return  true;
+}
 
-    if(! initObdDevice(ttyfd)) return -1;
+void fetchDataUntilObdDisable(const int ttyfd)
+{
 
-    //if(startCanbusListen(ttyfd) < 0) return -1;
-    //int timerfd = createTimerFd(1,0);//period=1second to calulate 1939 params
+    const unsigned long ms = 1.0e6;//1ms = 1.0e6 ns
+    static int timerfd = createTimerFd(0,100*ms);//the report interval = reportItemNum * timerFd;
+
+    if(ttyfd > 0)
+    {
+        while(true)
+        {
+
+            fetchObdData(ttyfd, timerfd); //send to lwm2m
+            //fetchJ1939Data_auto(ttyfd, timerfd);
+            //fetchJ1939Data_interactive(ttyfd, timerfd);//support interactive input
+            //g_logger.report(g_obdDataFetched);//log to file
+
+            if(!checkObdStatus(ttyfd)) break;
+        }
+    }
+
+}
+
+
+
+void periodCheckObdAndFetchData(const int obdCheckTimerfd)
+{
+    fd_set readset;
+    int maxfdp1 = (obdCheckTimerfd + 1);
+    int result;
+    do {
+        FD_ZERO(&readset);
+        FD_SET(obdCheckTimerfd, &readset);
+        result = select(maxfdp1, &readset, NULL, NULL, NULL);
+    } while (result == -1 && errno == EINTR);
+
+    if(result > 0)
+    {
+        uint64_t dummy;
+        read(obdCheckTimerfd, &dummy, sizeof(dummy));//tiemrfd must read
+
+        if(true || checkObdStatus(g_obdFd)) //obd device ready
+        {
+            fetchDataUntilObdDisable(1);//while-loop, break if obd become disable
+        }
+        else
+        {
+            if((g_obdFd = tryOpenAndInitialObd()) > 0)
+            {
+                fetchDataUntilObdDisable(g_obdFd);
+            }
+
+        }
+    }
+
+}
+
+
+
+
+int main(int argc, char* argv[])
+{
+    //const char* logfile = (argc >1) ? argv[1] : NULL;
+    //g_logger = Logger(logfile);
+
+
+    g_fdIpc = createUnixSocket();
+
+    const int obdCheckTimerfd = createTimerFd(10,0);//check obd device statue change, power on/off
 
     while(true)
     {
-        fetchObdData(ttyfd);
-        //fetchJ1939Data(ttyfd, timerfd);//support interactive input
-        //g_logger.report(g_j1939Report);//report to IMPACT or file
+        periodCheckObdAndFetchData(obdCheckTimerfd);
     }
 
+
     //close(ttyfd);
-    g_logger.finish();
+    //g_logger.finish();
     return 0;
 }
 

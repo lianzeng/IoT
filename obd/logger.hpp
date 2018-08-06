@@ -30,7 +30,7 @@ public:
         fp = NULL;
         hasParasUpdated = false;
     }
-    void report(const J1939Reports &report)//report to IMPACT or file
+    void report(const ObdDataInfo &report)//report to IMPACT or file
     {
         if(!fp || !hasParasUpdated) return;
         const int LENGTH = 100;//TODO:this buffer need extend if more items to report
@@ -65,7 +65,7 @@ public:
         hasParasUpdated = false;
     }
 private:
-    FILE* fp;
+    FILE* fp;//parse result file
     bool hasParasUpdated;
 };
 

@@ -11,6 +11,7 @@ typedef void (*Formula)(const std::string &canFrame);
 
 struct Formula1939
 {
+    const char* cmd;
     std::string canId;
     Formula     formula;
 };

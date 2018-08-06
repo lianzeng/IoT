@@ -9,7 +9,7 @@
 #include <string>
 #include <unistd.h>
 
-#define CAN_FRAME_LEN 34  //TODO:34 is length of "18FEF100 8 FC FF FE 04 00 00 00 00",need modify for ELM327
+
                           //currently only support 8bytes frame.
 class CanBusBuffer
 {
@@ -28,16 +28,23 @@ public:
         pos = 0;
         buff[LENGTH] = '\0';
     }
+    void printReceiveData(const char* rec, const int len)
+    {
+        std::string temp(rec, len);
+        printf("received: %s \n", temp.data());
+    }
     void receiveData(const int fd)//append can bus data.
     {
         if(isFull())
         {
-            printf("\n warning:buffer is full\n");
+            //printf("\n warning:buffer is full\n");
             return;
         }
         int len = ::read(fd,buff+pos,LENGTH-pos);
+        //printReceiveData(buff+pos, len);//only for debug, may confuse the output format.
         if(len > 0)
             pos += len;
+
     }
 
     bool isFull() const
@@ -54,26 +61,12 @@ public:
     {
         return std::string(buff, pos);
     }
-    std::string extractCanFrame(const std::string& canId, int& startPos) const
-    {
-        if(startPos < 0 || startPos >= pos) return "";
-        std::string allData = data();
-        size_t matchPos = allData.find(canId,startPos);
-        if(matchPos != std::string::npos && matchPos < pos)
-        {
-            startPos = (matchPos + CAN_FRAME_LEN);
-            int validBytes = pos - matchPos;
-            validBytes = (validBytes < CAN_FRAME_LEN) ? validBytes : CAN_FRAME_LEN;
-            return std::string(buff+matchPos,validBytes);
-        }
-        else
-            return "";
-    }
+
 
 private:
-    static const int LENGTH = 1024;//need extend to 20k.
+    static const int LENGTH = 100;
     char buff[LENGTH+1];
-    int  pos;
+    int  pos;//number of bytes in buffer
 };
 
 
