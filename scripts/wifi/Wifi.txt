@@ -1,0 +1,121 @@
+hsun006(hongliang.a.sun)  ,hongtacu(Hongtao.Cui):6lowpan;  WSL(shengli.wu),Zhu Siqiang;
+
+connect_nopwd.sh //ok as station mode with wpa_cli;
+
+To perform an iperf test, iperf must start both in server and client side: 
+iperf -h
+iperf -s -p 5201
+iperf -c 192.168.43.1 -p 5201  -i 2 -n 100m  //default:TCP, report interval=2s,totalTraffic=100Mbytes;
+
+http://processors.wiki.ti.com/index.php/WiLink8_WLAN_Demo:_Linux
+http://processors.wiki.ti.com/index.php/WiLink8_WLAN_Advanced_Demos:_Linux : station mode
+https://git.ti.com/wilink8-wlan/wl18xx_fw
+
+问题： /usr/sbin/文件系统有问题(EXT4-fs error),导致iptables等程序没有，需要修复文件系统；
+
+【iptables -t nat -A POSTROUTING -o ppp0 -j MASQUERADE  启动OS的NAT功能，并且设置网络出口为ppp0,这样OS会把其它网卡的数据从ppp0转出并且把srcIP替换为ppp0的IP（这个就是NAT），
+如果不启动NAT，来自wifi的数据虽然可以通过ppp0发出(defaultRoute)，但是因为IP地址没有更换为ppp0地址，会收不到公网数据】
+
+
+上层软件获取Wifi的数据是通过socket编程(ifconfig: wlan0).
+
+板子既可以作为AP模式启动WPA2 加密，又可以作为Station模式连接到WPA2加密的wifi热点；
+wifi: Station Mode(作为上网客户端)，AP Mode(作为网关，接受别的终端接入，具有DHCP功能)
+使能Wifi是通过CPU设置FPGA寄存器；
+
+切记：AP模式和SP模式切换，需要wl_poweron/on;否则wifi会coredump;
+
+两个SensorGW互相测试；
+
+AP模式(热点名称 ssid in file /etc/hostapd.conf): 只能接入10个UE;
+a)	Start WIFI
+/usr/share/wl18xx/wl_poweron.sh  每一步执行后都可以通过dmesg查看Log;
+/usr/share/wl18xx/ap_start.sh
+b)	Shutdown WIFI
+/usr/share/wl18xx/ap_stop.sh   执行这步后要执行poweroff/on;
+/usr/share/wl18xx/wl_poweroff.sh
+
+Wifi AP模式密码设置： WPA 加密比 WEP 更安全；
+修改: /etc/hostapd.conf 
+wep_default_key=1 
+wep_key0=123456789a 
+
+SP模式(http://processors.wiki.ti.com/index.php/WiLink8_WLAN_Advanced_Demos:_Linux):
+用例：手机分享wifi热点，板子作为客户端接入热点上网
+下面步骤使用 iw 命令配置成功，WPA_Supplicant没有试过。
+ifconfig wlan0 up  #enable the wlan0 interface if it's disable;
+iw wlan0 scan | grep SSID 扫描结果里面应该要包含待接入的wifi热点
+iw wlan0 connect xxx 连接wifi热点
+iw wlan0 link  显示连接结果
+udhcpc -i wlan0  #request IP address from the AP (using DHCP request),结果里面包含了获得的IP地址和网关地址
+ifconfig #verify wlan0 interface obtained ip address;
+ping gateway_ip  #这步应该可以ping通网关，如果板子的默认interface是wlan0(route查看),则可以上网(ping www.baidu.com);
+从手机上剔除设备后，通过(iw wlan0 link)显示没有连接，再通过(iw wlan0 connect xxx)重新连接成功；
+
+
+
+wlan0     Link encap:Ethernet  HWaddr 84:DD:20:75:0E:73  
+          inet addr:192.168.43.1  Bcast:192.168.43.255  Mask:255.255.255.0
+          inet6 addr: fe80::86dd:20ff:fe75:e73%lo/64 Scope:Link
+          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+          RX packets:2600 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:119 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:1000 
+          RX bytes:201061 (196.3 KiB)  TX bytes:18917 (18.4 KiB)
+		  
+WPA加密，接入失败log：
+修改参数 /etc/hostapd.conf
+wpa=1
+wpa_key_mgmt=WPA-PSK
+wpa_passphrase=12341234
+wpa_pairwise= CCMP
+///
+wlan0: STA d4:a1:48:5e:ae:d2 IEEE 802.11: authenticated
+wlan0: STA d4:a1:48:5e:ae:d2 IEEE 802.11: associated (aid 1)
+random: Cannot read from /dev/random: Resource temporarily unavailable
+random: Only 7/20 bytes of strong random data available from /dev/random
+random: Not enough entropy pool available for secure operations
+WPA: Not enough entropy in random pool to proceed - reject first 4-way handshake
+wlan0: STA d4:a1:48:5e:ae:d2 IEEE 802.11: deauthenticated due to local deauth request		  
+
+使用 wpa_supplicant +  wpa_cli  也可以配置AP，SP模式（可以接入WPA2加密热点）:http://processors.wiki.ti.com/index.php/WiLink8_WLAN_Advanced_Demos:_Linux#AP_configuration_with_WPA_Supplicant
+每次系统重启后要执行 :   wpa_supplicant -d -Dnl80211 -c/etc/wpa_supplicant.conf -iwlan0 -B  否则会提示Failed to connect to non-global ctrl_ifname: wlan0  error: No such file or directory;
+
+root@sensorgw-imx6q:/usr/share/wl18xx# wpa_cli -iwlan0 status 作为station模式接入WPA2加密的wifi热点的log
+bssid=d4:a1:48:5e:ae:d2
+freq=2412
+ssid=Lavida
+id=0
+mode=station
+pairwise_cipher=CCMP
+group_cipher=CCMP
+key_mgmt=WPA2-PSK
+wpa_state=COMPLETED
+ip_address=192.168.43.24
+address=84:dd:20:75:0c:5b
+uuid=19b4e1e1-5e98-5119-be72-b2cd200bdaa4
+
+////////////////////作为AP模式，启动WPA2加密: http://www.cnblogs.com/zhuwenger/archive/2011/03/11/1980294.html
+./wl_poweron.sh
+./ap_start_wpa2.sh
+./ap_stop_wpa2.sh
+./wl_poweroff.sh 
+
+尽管也会出现失败，但多试2次还是成功的；
+WPA: Not enough entropy in random pool to proceed - reject first 4-way handshake
+wlan0: STA d4:a1:48:5e:ae:d2 IEEE 802.11: deauthenticated due to local deauth request
+wlan0: STA d4:a1:48:5e:ae:d2 IEEE 802.11: authenticated
+wlan0: STA d4:a1:48:5e:ae:d2 IEEE 802.11: associated (aid 1)
+random: Cannot read from /dev/random: Resource temporarily unavailable
+random: Only 7/20 bytes of strong random data available from /dev/random
+random: Not enough entropy pool available for secure operations
+WPA: Not enough entropy in random pool to proceed - reject first 4-way handshake
+wlan0: STA d4:a1:48:5e:ae:d2 IEEE 802.11: deauthenticated due to local deauth request
+wlan0: STA d4:a1:48:5e:ae:d2 IEEE 802.11: authenticated
+wlan0: STA d4:a1:48:5e:ae:d2 IEEE 802.11: associated (aid 1)
+random: Cannot read from /dev/random: Resource temporarily unavailable
+random: Only 7/20 bytes of strong random data available from /dev/random
+random: Allow operation to proceed based on internal entropy
+wlan0: AP-STA-CONNECTED d4:a1:48:5e:ae:d2
+wlan0: STA d4:a1:48:5e:ae:d2 RADIUS: starting accounting session 4ADFC696-00000002
+wlan0: STA d4:a1:48:5e:ae:d2 WPA: pairwise key handshake completed (RSN)

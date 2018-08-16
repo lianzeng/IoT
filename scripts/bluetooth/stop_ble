@@ -1,0 +1,13 @@
+#!/bin/sh
+
+killall -9 hciattach
+
+wmem 8000032 5a 2 
+sleep 2
+
+sleep 1
+killall -9 bluetoothd
+
+# LED Control
+/usr/bin/wmem 0x80000AC 0x00 2
+

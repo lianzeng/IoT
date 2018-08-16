@@ -1,0 +1,148 @@
+/opt/zb/gitlab-zb/office-gitlab/IG_Project  zengbiao开发项目
+linux mysql : root+impact
+6lowpan: 500米
+LM: zeng lingwu ;tribe leader: Chan Dawei;
+https://www.kancloud.cn/digest/yocto/138642 yocto 
+http://10.140.23.244/dashboard/projects   lianzeng,lianzeng
+Zeng, Liang 1. (NSB - CN/Hangzhou) <liang.1.zeng@nokia-sbell.com>
+
+芯片: imx
+6LoWPAN(IEEE 802.15.4): (Ipv6 + wireless)   personal area network low-power low-data rate, 2.4GHZband ;类似于 Wifi,BlueTooth; 都是短距离无线通信;6LoWPAN将全面替代ZigBee;
+pan id: 0xabcd ;
+ipv6 addr: 2000::1/64 Global, 通过ifconfig查看
+Sensorgateway首次升级用(UsbOTG+MfgTool+COM串口看输出信息),需要跳线帽（禁止watchdog），后面升级用（网口+FTP+SSH调试）,串口转USB一般都需要在Host安装驱动；
+MfgTool有个.xml配置文件，可以配置烧写的file,如果要单独升级uboot只能通过OTG口; 编译生成uboot: bitbake u-boot-imx;
+如果某个target要用bitbake编译，需要写对应的recipe文件(.bb) or .bbappend 文件;
+
+对于一块新板子，最先调通的是 CPU && DDR && OTG interface;  硬件同事在做PCB的同时，软件同事用芯片厂商提供的样例板可以同步开发功能；
+SensorGW=主板(cpu+ddr,OTG/usb/hdmi/SATA) + Radio板(lte/wifi/blue/6lowpan/zigbee/Nbiot) + 接口板(spi/uart/ethenet);
+主板上的2个按键：1个用来烧写，1个是reset; 射频板上留有zigbee的JTAG口;
+
+bitbake target(*.bb):
+IG_Project/sources/meta-nsb/recipes-core/rootfs/rootfs.bb   (create *.ext4 ?)
+IG_Project/sources/meta-nsb/recipes-core/images/sensorgw-image-minimal.bb
+IG_Project/sources/meta-nsb/recipes-bsp/u-boot/u-boot-imx_2017.03.bbappend
+IG_Project/sources/meta-nsb/recipes-bsp/u-boot/u-boot-imx/: uboot.patch;
+IG_Project/sources/meta-nsb/recipes-kernel/linux/linux-imx_4.9.11.bbappend
+IG_Project/sources/meta-nsb/recipes-kernel/linux/linux-imx/sensorgw.cfg :  配置需要编译的模块,如果需要增加驱动，就需要修改这个文件;
+IG_Project/sources/meta-nsb/recipes-app/ : lte-utils.bb,debugtools.bb,fpgauart.bb,nbiot-utils.bb,wifi-utils.bb,bsp.bb;6lowpan.bb;
+
+FPGA source code: 
+IG_Project/build/tmp/work/cortexa9hf-neon-poky-linux-gnueabi/fpgauart/1.0-r0/files
+
+uboot source code: 
+IG_Project/build/tmp/work/sensorgw_imx6q-poky-linux-gnueabi/u-boot-imx/2017.03-r0/git/arch/arm/cpu/u-boot.lds :  entry(_start)
+IG_Project/build/tmp/work/sensorgw_imx6q-poky-linux-gnueabi/u-boot-imx/2017.03-r0/git/arch/arm/lib/vectors.S:    entry(_start)
+IG_Project/build/tmp/work/sensorgw_imx6q-poky-linux-gnueabi/u-boot-imx/2017.03-r0/git/arch/arm/cpu/armv7/start.S: 
+   a)reset(): disable interrupts, also set the cpu to SVC32 mode;
+   b)cpu_init_cp15():disable the MMU and TLB
+   c)cpu_init_crit(): init critical registers,memory timing;
+
+.dts文件生成.dtb文件:   IG_Project/build/tmp/work-shared/sensorgw-imx6q/kernel-source/arch/arm/boot/dts/sensorgw-imx6.dts
+linux kernel源码:  IG_Project/build/tmp/work/sensorgw_imx6q-poky-linux-gnueabi/linux-imx/4.9.11-r0/git 			--->IG_Project/build/tmp/work-shared/sensorgw-imx6q/kernel-source/
+uboot源码:         IG_Project/build/tmp/work/sensorgw_imx6q-poky-linux-gnueabi/u-boot-imx/2017.03-r0/git   
+板子上的根目录对应project工程的sysroots目录:   /   --->   IG_Project/build/tmp/sysroots
+   
+驱动编译：如果是kernel自带的驱动则只需要修改编译的.config文件即可，如果是自定义驱动，需要写makefile;
+step1)IG_Project/sources/meta-nsb/recipes-kernel/linux/linux-imx$ vi sensorgw.cfg , add CONFIG_USB_SERIAL_CP210X=m;(驱动.ko)，如果=y(直接编译进内核);
+step2)bitbake linux-imx 开始编译kernel;
+step3)IG_Project/build/tmp/deploy/images/sensorgw-imx6q/modules--4.9.11-r0-sensorgw-imx6q-20180507080018.tgz  包含了所有的.ko模块
+step4)IG_Project/build/tmp/work/sensorgw_imx6q-poky-linux-gnueabi/linux-imx/4.9.11-r0/build  $ vi .config 如果没有生成，需要确认上述修改是否真的生效(CONFIG_USB_SERIAL_CP210X)
+
+6LowPan:ADF7030-1;  Blue:TI CC2564C;  Zigbee:TI CC2530;  NBIOT:Quectel-BC95-B5(UART); LTE/GPS:Quectel EC20 R2.0;  Wifi:TI WL1805;
+其它接口: Ethernet(+BCM53134 Switch),UART(RS232,RS485,RS422),AnalogDigitConvert(ADS7263+FPGA),DigitIO(FPGA simulated,threshold=1.5V)
+SPI(FPGASimulated),SPI对编程的接口是fd设备文件,通过ioctl(fd, SPI_IOC_MESSAGE, &tr)来读写;
+NBIOT对应用层的编程接口是UART串口,应用程序发送数据(含数据+dstIP)到芯片，芯片再转发到internet,不像LTE可以自动转发其他网口数据，NBIOT需要写程序来实现转发;
+板子上NBIOT和LTE用同一个SIM卡槽，NBIOT是电信网络；
+
+http://yoctoproject.org/documentation  
+http://www.openembedded.org/
+
+Sensorgw 使用Linux 4.9的内核， 采用NXP提供的Linux Yocot工程编译内核， 针对NXP开发板和Sensorgw的硬件上的差异做了些修改，
+sensorgw-image-minimal.bb定义了整个sensorgw的编译内容，编译sensorgw大包时， 执行: bitbake sensorgw-image-minimal 即可；
+step0: 安装交叉编译工具，用NXP芯片商提供的yocto工程；
+step0: 用户lianzeng登陆到linux server;
+step1: source fsl-setup-release.sh -b build 在目录IG_Project下面执行(如果已经有build目录则先删除)，执行完毕后会自动建立build目录，并进入build目录,执行成功后输出：
+Your build environment has been configured with:
+    MACHINE=sensorgw-imx6q
+    SDKMACHINE=i686
+    DISTRO=fsl-imx-x11
+	这时执行 bitbake --version ，就会有结果： BitBake Build Tool Core version 1.32.0 ; 不过这个命令执行很慢；
+step2: bitbake sensorgw-image-minimal  生成镜像，在build目录执行，这步执行需要半个小时，执行完会告知成功和失败的task个数；
+step3: download zImage-sensorgw-imx6.dtb(device tree binary) && zImage-sensorgw-imx6q.bin && sensorgw-image-minimal-sensorgw-imx6q.ext4 to target/appstore ;  下载镜像到开发板，   这3个的路径(build/tmp/deploy/images/sensorgw-imx6q)
+step4: install_pkg.sh  /appstore  安装新镜像
+
+
+\\hzeesn10.china.nsn-net.net\ee_releases\osesee\repository\tools
+JLINK资料：pan.baidu.com/s/1dE4pMVZ
+MDK资料： pan.baidu.com/s/1bo9nqDx
+stm32f103CBT6
+
+linux pc impact: impact,impact
+Nx Server for linux14F:10.140.23.244:4000
+linux server: 10.140.23.244(remoteuse); 10.166.240.26     iot/iot1234;   lianzeng/iot   IP(192.168.102.12),windows ip(192.168.102.16: 255.255.255.0, Gateway:192.168.102.1)
+   通过FileZilla在server和本地传输文件(192.168.102.12+port22).
+SensorGateway ip: 192.168.1.100, root , nsb#1234, windows ip(192.168.1.106,Gateway:192.168.1.1),windows用ip106开启了ftpserver: ftp://192.168.1.106 user(lianzeng),pwd(Oli***1$) ftpget -u lianzeng -p Oliver1$ -v 192.168.1.106 cp210x.ko
+通过FileZilla在Sensorgateway和本地传输文件(192.168.1.100+port22).
+arm gcc version 6.2.0 , virtualbox:gcc version 4.9.2 
+
+CP2102:  USB to Serial Converter, 把上位机的USB信号转换为串口信号，然后传给单片机处理；
+淘宝上购买的CAN分析仪上的CAN收发器TJA1050是NXP公司的芯片,更好的CAN芯片是TJA1055;
+baudrate:115200
+
+在boot时自动加载驱动：在/etc/rc.local 中加入一行: insmod /lib/modules/4.9.11-1.0.0+gc27010d/kernel/drivers/usb/serial/cp210x.ko 
+seetaface:是中科院开发的人脸识别库，开源免费可用，包含人脸检测，人脸识别;
+DLib: 检测眼镜是否闭上（打瞌睡）
+Tensorflow: 人的姿态识别，跟踪双手移动；
+
+
+ keil computer id:  CQZWK-P2704: 
+ license id: ATTBS-LIGNE-H8MFS-LCJUS-H5EID-ZYTKG
+
+
+执行 start_kura 后可以IE:  192.168.1.100 admin      admin 
+OS: Linux 4.9.11-1.0.0
+Kernel Project: Yocto
+Kernel Version: 4.9.11-r0
+
+Linux sensorgw-imx6q 4.9.11-1.0.0+gc27010d #1 SMP PREEMPT Fri Mar 2 14:29:33 CST 2018 armv7l(cortexA9) GNU/Linux
+
+ BusyBox是一个集成了一百多个最常用Linux命令和工具的软件工具箱，它在单一的可执行文件中提供了精简的Unix工具箱
+
+Modbus RTU:建立在串口RS485之上的二进制通信协议(不是ASCII字符)，应用于工业现场；
+Modbus RTU协议PDU格式：地址码(一个字节），功能码（一个字节），数据长度（1个字节），数据内容(MSB--LSB)，校验码（两个字节）五个部分组成.
+
+.java(source code file)--->.class(bytecode),run on JVM.
+.jar: java压缩包，可以用java虚拟机打开
+ An OSGi bundle is a regular  .jar file
+
+ minicom --help: 波特率设置太大导致乱码?
+ ~/.minirc.dfl
+ minicom -D /dev/ttyUSB0 -b 115200
+ 
+ minicom -s : set serial com
+ Ctrl+a: x 退出
+ Ctrl+a: e 打开回显，不然会以为没有反应
+ 
+ //////////烧写程序：先生成.hex文件，再download;
+ Keil--Flash--Download:
+ erase done,
+ programing done,
+ verify ok
+ application running
+ flash load finished.
+ 
+ ///////编译:
+source  /opt/fsl-imx-x11/4.9.11-1.0.0/environment-setup-cortexa9hf-neon-poky-linux-gnueabi 
+echo $CC , then output : arm-poky-linux-gnueabi-gcc;	 
+compile: $CC *.cpp  or $CXX *.cpp
+
+
+
+报销：
+广成科技的USBCan, 深圳的j1939开发板；
+
+
+
+ 
+ 

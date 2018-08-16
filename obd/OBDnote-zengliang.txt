@@ -1,0 +1,119 @@
+
+OBD接口CanBUS：=6(High)    +    14(Low)
+
+ELM327蓝牙OBD ，问题：蓝牙插入OBD后是自动会与汽车交互并获取数据吗？ 还是需要收到APP指令后才开始交互？试验：蓝牙匹配，不打开APP，看能否侦听到数据；
+http://www.360doc.com/content/16/0221/11/30626013_536153188.shtml  不错的OBD文章
+1.汽车处于点火，蓝牙插入后，不连接APP，观察侦听器能否采集到数据？ 等APP连接后观察侦听器数据？得出结论：蓝牙是否需要接收APP指令才开始工作？？
+答：没做网关的汽车OBD里会看见有数据，但是这些数据是内部各系统的通信数据，不是专门给OBD接口的，德系车有网关，只允许OBD数据往OBD接口送，增加安全性。
+2.ECU只在电门2档才工作（ACC为1档），OBD检测器才有数据传输？？ 反正汽车点火后是可以检测到数据的。
+///////////////////////////
+miniOBD pwd:111111
+诊断指令:  AT+ISO15765-4EXT_250K(激活)， AT+DS048(发动机转速),AT+DS049(车速) AT+DTC(读故障码)，AT+STOPDS(停止读数据),AT+EXIT(退出协议)
+操作软件：OBDEmulator(汽车)，AccessPort(诊断设备), OBDAnalyst(侦听器)
+, CAN=ControlAreaNetwork
+OBD上的CAN速率只有4种： 500K, 250K(卡车), 125K(noExistforOBDII),33.3K; 
+ISO15765-4 :11bit/29bit, 500K, 250K.
+ISO15765-4协议.pdf中文的指令编号是错的，和代码不匹配，但计算规则是对的， DSControlTypeDef.FineByte:用于Formula()的地址偏移
+单线CAN和双线CAN的接线方式不同，单线CAN要求CAN-Low接地。
+对奔驰车需要去掉电阻才能侦听到CAN数据?
+ISO15765-4(Can协议),其它的是KL线;
+第1步：协议激活: ISO15765_4()
+
+ERROR-001 指令格式错误
+ERROR-002 指令执行前需要执行别的指令
+
+标准CAN命令标示符 0x7DF, 扩展CAN命令标示符 0x18DB33F1; 诊断设备发给汽车的数据以0x7DF(ID)开头，上位机发送AT指令给诊断器，
+然后诊断器转换为下面的码流发给汽车。
+如果自己开发蓝牙上位机，不需要关心CAN速率识别，如果ELM327会自动发出数据，则上位机只管接收并解析数据，否则上位机需要发送应用层数据给ELM。
+
+
+
+
+
+//////////////////material 
+https://pan.baidu.com/s/18RFtA5W3jVy7kM6J8GDk9w pwd:hpsp OBD诊断设备和CAN分析仪
+https://pan.baidu.com/s/1kWI63Wz   pwd:x6a0  OBD模拟器
+introduction:  http://v.youku.com/v_show/id_XMjcyOTk5ODIyMA==.html?spm=a2h3j.8428770.3416059.1
+专业诊断设备和模拟器交互:  http://v.youku.com/v_show/id_XMjc4MzIzOTk2MA==.html?spm=a2h3j.8428770.3416059.1
+诊断设备和模拟器交互：  http://v.youku.com/v_show/id_XMTM1NjM2MjI0MA==.html
+实车测试视频： http://v.youku.com/v_show/id_XODY2NDkxODk2.html 
+高效入门OBD协议方法 http://v.youku.com/v_show/id_XMTc3ODk0NDkxNg==.html 
+高效入门OBD协议方法之CAN总线 http://v.youku.com/v_show/id_XMTc3ODM0MTEyMA==.htm
+高效入门OBD协议方法之K总线 http://v.youku.com/v_show/id_XMTc3ODg1OTE5Ng==.html
+
+//////////////////////概念
+读取故障码不能太频繁，否则会导致问题？？汽车有私有协议？？
+标准的JTAG接口是4线：TMS、TCK、TDI、TDO，分别为模式选择、时钟、数据输入和数据输出线，用于Debug;
+调试单片机程序：PC---Jlink仿真器----(通过排线)Jlink转接板---(通过Jtag口)单片机；
+OBD:on-board diagnose
+ELM327芯片：把OBD接口转换为UART接口，然后就可以方便的转为USB/BlueTooth/Wifi传输。
+UART(universal asynchronous receiver-transmitter): 异步收发器，
+stm32f103CBT6: arm 32bit.
+GPIO: general purpose input,output.
+bsp:board support package, is used by OS .
+OBD模拟器协议激活后才能和诊断设备通信；真实汽车在形式时如果不插入OBD设备会自动往OBD接口吐数据吗
+OBD接口有16个Pin，分成好几组，采用的协议不同，功能都是读取数据，我们只关注CAN协议的那2个PIN(6,14)就可以了。
+
+ELM327 OBD2蓝牙汽车诊断仪，支持标准的ISO,KWP协议，不支持J1939协议，可以测试小汽车，不能测试（货车 ，卡车  ，客车，电动车，混动车，油气两用，柴油车）。
+
+//////////////////////////////////////////////code read
+下位机代码工程： OBD2.uvprojx ， 上位机代码工程： OBDSimulator.sln;
+
+//////////下位机代码：
+OBDAnalyst的下位机波特率原为921600，上位机也是这个，后来被修改为115200,上位机和下位机都修改了;
+CanRxMsg.DLC : 接收到的数据字节数，一般是8，j1939协议只有1个报文是3字节，其它都是8字节；
+ISO15765_4(): mainloop，这个是诊断器的下位机代码
+ISO15765_4_DS(): 发送指令，读取数据流，计算结果
+ISO15765_4_Config(): 这个是对汽车设置还是诊断设备？ 在SensorGateway需要执行吗？？
+Send_CANFrame(&EntCmd15765,CANStype,&err); 协议激活，在SensorGateway怎么构造CanTxMsg struct?
+Send_CANFrame(): 发送数据后等待1.5s可以接收到对方数据，这个时间是模拟器还是真实汽车？
+CAN_Transmit(): 
+void PC_USART_Config(u32 Baud);
+PC_USART_IRQHandler():下位机接收上位机指令后的handle函数，设置CotrolVale;
+CAN1_Config16BitFilter(0x7e8,0x7e8,0x7e0,0x7e0);//standard, 校验码=0x7e8 就是对方发过来的指令第1个字节??? 屏蔽码=0x7e0 ???
+CAN1_Config32BitFilter(0x18DAF110,0x18DAF110,0x1FFFF100,0x1FFFF100);//extend,校验码=0x18DAF110
+
+bsp.c:
+CAN_Config()/CAN1_Config32BitFilter/KL_LINE_Config/KL_LINE_Enable
+
+
+printf(): output to pc from simulator.
+PC_USART_IRQHandler():called if receive ATCmd from PC: CotrolVale = SYS01("AT+ISO15765-4STD_500K")协议激活, CotrolVale = SYSDS("AT+SDS"),模拟数据流 
+-->main(CotrolVale)--->ISO15765_4Setting(): 
+
+TransmitMailbox = CAN_Transmit(CAN1,&CANCPTab->CANTXCMD[CANCPTab->CANRXCMD[IRQVar.CPS].REQ]): 发给诊断设备????
+while(CAN_TransmitStatus(CAN1,TransmitMailbox) != CANTXOK);
+
+诊断器支持的协议： 1)ISO15765-4 500K 标准CAN 协议;2)ISO15765-4 500K 扩展CAN 协议;3)ISO15765-4 250K 标准CAN 协议;4)ISO15765-4 250K 扩展CAN 协议;5)ISO14230-4 ; 6)ISO9141-2
+
+/////////上位机代码：
+设置串口：comboBox1_SelectedIndexChanged: Serialport_Config(comx,256000) SendATCMD("1")
+
+///////////////////移植SensorGateway：
+1.写一个cpp.bin在linux run, 初始版本用户通过终端输入命令来查询OBD数据，进程接收终端输入(select(fd = STD_IN))，最终版本是通过select(socktfd)接收来自IMPACT的user command.
+
+//////////////////问题
+1.如果要自己在ARM上写程序读取汽车数据，是要参考诊断设备的下位机源码？
+2.模拟器上那个16个插口是连接诊断设备的？？ 连接上诊断设备后，模拟器的数据在变化时会主动推送给诊断器？？
+3.诊断设备需要去尝试每个协议，找到汽车真实使用的那个协议； 
+4.http://v.youku.com/v_show/id_XMjc4MzIzOTk2MA==.html?spm=a2h3j.8428770.3416059.1 这个视频里面使用的是你们店的诊断设备？？诊断设备是通过USB连接PC，能提供蓝牙吗？
+5.CAN_Transmit() diff with Send_CANFrame() ???
+6.Send_KWP2000Frame(): 这个函数是给诊断设备发送数据吗，如果只有模拟器是不会跑到的，对吗
+7.汽车OBD接口1分2转接线，分别接Nokia盒子和OBD分析仪。OBD分析仪的功能是可以捕获汽车发出来的所有数据。
+
+8.真实汽车在激活后，会主动往外发数据吗？ 真实汽车接收到诊断设备指令后只返回1条记录还是源源不断的返回数据？
+9.诊断设备在Accessport上显示的数据是OBD输出接口(16口)的所有码流 还是诊断设备下位机加工过的数据 ？ 如何获取16口的原始码流？通过Can分析仪吗？
+
+//////////problem:
+1.open OBDSimulator.sln under dir(OBDv2.3.2\second\v1.1\OBDSimulator\OBDSimulator) with microsoft visual studio community 2017.
+compile error: Could not locate the assembly "Microsoft.VisualBasic.PowerPacks.Vs, Version=10.0.0.0 ?
+Answer: download VisualBasicPowerPacksSetup.exe from  http://go.microsoft.com/fwlink/?LinkID=145727&clcid=0x804 , and install, then rebuild project, ok.
+
+2.how to open OBD2.uvprojx file ?
+Answer: download MDK524a.EXE( keil uvison5 ) from http://www.keil.com/uvision/
+
+3.can't show Chinese in file chinese.c ?
+Answer: change PC language setting  :control pannel---language---change system locale(default english) to Chinese(simplified);
+
+4.Silicon Labs CP210x USB to UART Bridge(COM3)
+5.使用Accessport时，按F10来发送数据；

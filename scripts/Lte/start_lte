@@ -1,0 +1,17 @@
+#!/bin/sh
+
+echo 1 > /proc/sys/net/ipv4/ip_forward
+pppd call quectel-ppp &
+
+while true; do
+
+    if ifconfig | grep ppp0; then
+        echo "config NAT service"
+        iptables -t nat -A POSTROUTING -o ppp0 -j MASQUERADE 
+        break
+    else
+        echo "wait for ppp0 up"
+        sleep 1
+    fi
+    
+done

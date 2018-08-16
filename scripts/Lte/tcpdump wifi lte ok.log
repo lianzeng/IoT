@@ -1,0 +1,812 @@
+^C07:26:41.107212 IP sensorgw-imx6q.60103 > 103.235.46.191.https: Flags [S], seq 3652298442, win 65535, options [mss 1360,sackOK,TS val 21073412 ecr 0,nop,wscale 6], length 0
+
+68 packets captured
+8777 packets received by filter
+8702 packets dropped by kernel
+root@sensorgw-imx6q:~# tcpdump -i ppp0
+tcpdump: verbose output suppressed, use -v or -vv for full protocol decode
+listening on ppp0, link-type LINUX_SLL (Linux cooked), capture size 262144 bytes
+07:27:02.587585 IP sensorgw-imx6q.35285 > 183.213.21.221.https: Flags [.], ack 25255389, win 8192, options [nop,nop,sack 4 {70721:72081}{68001:69361}{65281:66641}{62561:63921}], length 0
+07:27:02.595425 IP 183.213.21.221.https > sensorgw-imx6q.35285: Flags [.], seq 47601:48961, ack 0, win 2046, length 1360
+07:27:02.601074 IP sensorgw-imx6q.35285 > 183.213.21.221.https: Flags [.], ack 1, win 8192, options [nop,nop,sack 4 {73441:74801}{70721:72081}{68001:69361}{65281:66641}], length 0
+07:27:02.605571 IP sensorgw-imx6q.35285 > 183.213.21.221.https: Flags [.], ack 1, win 8192, options [nop,nop,sack 4 {42177:43537}{73441:74801}{70721:72081}{68001:69361}], length 0
+07:27:02.607238 IP 183.213.21.221.https > sensorgw-imx6q.35285: Flags [.], seq 53041:54401, ack 0, win 2046, length 1360
+07:27:02.612319 IP sensorgw-imx6q.35285 > 183.213.21.221.https: Flags [.], ack 1, win 8192, options [nop,nop,sack 4 {47601:48961}{42177:43537}{73441:74801}{70721:72081}], length 0
+07:27:02.617491 IP sensorgw-imx6q.35285 > 183.213.21.221.https: Flags [.], ack 1, win 8192, options [nop,nop,sack 4 {53041:54401}{47601:48961}{42177:43537}{73441:74801}], length 0
+07:27:07.677086 IP promote.cache-dns.local.http > sensorgw-imx6q.34060: Flags [.], seq 3550010237:3550011585, ack 3234574437, win 12543, options [nop,nop,TS val 4195520141 ecr 21076066], length 1348: HTTP
+07:27:07.680584 IP promote.cache-dns.local.http > sensorgw-imx6q.34060: Flags [.], seq 4294957860:4294959208, ack 1, win 12543, options [nop,nop,TS val 4195520141 ecr 21076066], length 1348: HTTP
+07:27:07.686959 IP sensorgw-imx6q.53155 > 112.4.12.200.domain: 21289+ PTR? 170.153.111.223.in-addr.arpa. (46)
+07:27:07.695183 IP promote.cache-dns.local.http > sensorgw-imx6q.34060: Flags [.], seq 1348:2696, ack 1, win 12543, options [nop,nop,TS val 4195520143 ecr 21076067], length 1348: HTTP
+07:27:07.701914 IP sensorgw-imx6q.34060 > promote.cache-dns.local.http: Flags [.], ack 4294790708, win 12365, options [nop,nop,TS val 21076071 ecr 4195519651,nop,nop,sack 3 {4294965948:1348}{4294961904:4294964600}{4294959208:4294960556}], length 0
+07:27:07.709853 IP promote.cache-dns.local.http > sensorgw-imx6q.34060: Flags [.], seq 2696:4044, ack 1, win 12543, options [nop,nop,TS val 4195520145 ecr 21076067], length 1348: HTTP
+07:27:07.713621 IP promote.cache-dns.local.http > sensorgw-imx6q.34060: Flags [.], seq 4294964600:4294965948, ack 1, win 12543, options [nop,nop,TS val 4195520145 ecr 21076067], length 1348: HTTP
+07:27:07.738353 IP sensorgw-imx6q.57112 > 112.4.12.200.domain: 30621+ PTR? 200.12.4.112.in-addr.arpa. (43)
+07:27:07.744823 IP promote.cache-dns.local.http > sensorgw-imx6q.34060: Flags [.], seq 6740:8088, ack 1, win 12543, options [nop,nop,TS val 4195520148 ecr 21076072], length 1348: HTTP
+07:27:12.783265 IP sensorgw-imx6q.54565 > 203.208.41.63.https: Flags [P.], seq 956253321:956253367, ack 3051086454, win 1570, options [nop,nop,TS val 21076579 ecr 480132091], length 46
+07:27:12.788366 IP sensorgw-imx6q.34060 > promote.cache-dns.local.http: Flags [F.], seq 1, ack 4294790708, win 12365, options [nop,nop,TS val 21076579 ecr 4195519651,nop,nop,sack 3 {261512:262860}{253424:260164}{119972:252076}], length 0
+07:27:12.791946 IP sensorgw-imx6q.54618 > 112.4.12.200.domain: 13047+ PTR? 63.41.208.203.in-addr.arpa. (44)
+07:27:12.800120 IP promote.cache-dns.local.http > sensorgw-imx6q.60605: Flags [.], ack 2891352938, win 12543, length 0
+07:27:12.814759 IP promote.cache-dns.local.http > sensorgw-imx6q.34060: Flags [.], seq 262860:264208, ack 1, win 12543, options [nop,nop,TS val 4195520653 ecr 21076579], length 1348: HTTP
+07:27:12.818653 IP promote.cache-dns.local.http > sensorgw-imx6q.34060: Flags [.], seq 260164:261512, ack 1, win 12543, options [nop,nop,TS val 4195520653 ecr 21076579], length 1348: HTTP
+07:27:12.828378 IP sensorgw-imx6q.60605 > promote.cache-dns.local.http: Flags [.], ack 1, win 3614, options [nop,nop,TS val 21076583 ecr 3911617708,nop,nop,sack 2 {17525:20221}{1349:16177}], length 0
+07:27:18.043877 IP sensorgw-imx6q.41035 > 112.4.12.200.domain: 37354+ PTR? 37.186.111.223.in-addr.arpa. (45)
+07:27:18.047461 IP sensorgw-imx6q.35285 > 183.213.21.221.https: Flags [.], ack 318257, win 8375, options [nop,nop,sack 4 {461041:471921}{421601:459681}{412081:420241}{405281:406641}], length 0
+07:27:18.049385 IP 183.213.21.221.https > sensorgw-imx6q.35285: Flags [.], seq 473281:474641, ack 42, win 2046, length 1360
+07:27:18.103611 IP 183.213.21.221.https > sensorgw-imx6q.35285: Flags [.], seq 480081:481441, ack 42, win 2046, length 1360
+07:27:18.107195 IP 183.213.21.221.https > sensorgw-imx6q.35285: Flags [.], seq 481441:482801, ack 42, win 2046, length 1360
+07:27:18.112930 IP sensorgw-imx6q.35285 > 183.213.21.221.https: Flags [.], ack 318257, win 8375, options [nop,nop,sack 4 {473281:478721}{461041:471921}{421601:459681}{412081:420241}], length 0
+07:27:18.116310 IP sensorgw-imx6q.35285 > 183.213.21.221.https: Flags [.], ack 318257, win 8375, options [nop,nop,sack 4 {477361:478721}{473281:478721}{461041:471921}{421601:459681}], length 0
+07:27:18.121153 IP sensorgw-imx6q.35285 > 183.213.21.221.https: Flags [.], ack 318257, win 8375, options [nop,nop,sack 3 {461041:478721}{421601:459681}{412081:420241}], length 0
+07:27:18.126494 IP sensorgw-imx6q.35285 > 183.213.21.221.https: Flags [.], ack 318257, win 8375, options [nop,nop,sack 4 {480081:481441}{461041:478721}{421601:459681}{412081:420241}], length 0
+07:27:18.131795 IP sensorgw-imx6q.35285 > 183.213.21.221.https: Flags [.], ack 318257, win 8375, options [nop,nop,sack 4 {480081:482801}{461041:478721}{421601:459681}{412081:420241}], length 0
+07:27:18.138276 IP 183.213.21.221.https > sensorgw-imx6q.35285: Flags [.], ack 42, win 2046, length 0
+07:27:18.144101 IP 183.213.21.221.https > sensorgw-imx6q.35285: Flags [.], seq 482801:484161, ack 42, win 2046, length 1360
+07:27:18.151482 IP sensorgw-imx6q.35285 > 183.213.21.221.https: Flags [.], ack 318257, win 8375, options [nop,nop,sack 4 {480081:482801}{461041:478721}{421601:459681}{412081:420241}], length 0
+07:27:18.156103 IP sensorgw-imx6q.35285 > 183.213.21.221.https: Flags [.], ack 318257, win 8375, options [nop,nop,sack 4 {480081:484161}{461041:478721}{421601:459681}{412081:420241}], length 0
+07:27:18.161030 IP 183.213.21.221.https > sensorgw-imx6q.35285: Flags [.], seq 484161:485521, ack 42, win 2046, length 1360
+07:27:18.172874 IP sensorgw-imx6q.35285 > 183.213.21.221.https: Flags [.], ack 318257, win 8375, options [nop,nop,sack 4 {480081:485521}{461041:478721}{421601:459681}{412081:420241}], length 0
+07:27:18.176604 IP 183.213.21.221.https > sensorgw-imx6q.35285: Flags [.], seq 485521:486881, ack 42, win 2046, length 1360
+07:27:18.178926 IP 183.213.21.221.https > sensorgw-imx6q.35285: Flags [.], seq 478721:480081, ack 42, win 2046, length 1360
+07:27:18.181232 IP 183.213.21.221.https > sensorgw-imx6q.35285: Flags [.], seq 486881:488241, ack 42, win 2046, length 1360
+07:27:18.183551 IP 183.213.21.221.https > sensorgw-imx6q.35285: Flags [.], seq 488257:489617, ack 42, win 2046, length 1360
+07:27:18.194031 IP sensorgw-imx6q.35285 > 183.213.21.221.https: Flags [.], ack 318257, win 8375, options [nop,nop,sack 4 {480081:486881}{461041:478721}{421601:459681}{412081:420241}], length 0
+07:27:18.196229 IP 183.213.21.221.https > sensorgw-imx6q.35285: Flags [.], seq 489617:490977, ack 42, win 2046, length 1360
+07:27:18.199476 IP sensorgw-imx6q.35285 > 183.213.21.221.https: Flags [.], ack 318257, win 8375, options [nop,nop,sack 3 {461041:486881}{421601:459681}{412081:420241}], length 0
+07:27:18.201645 IP sensorgw-imx6q.35285 > 183.213.21.221.https: Flags [.], ack 318257, win 8375, options [nop,nop,sack 3 {461041:488241}{421601:459681}{412081:420241}], length 0
+07:27:18.204346 IP sensorgw-imx6q.35285 > 183.213.21.221.https: Flags [.], ack 318257, win 8375, options [nop,nop,sack 4 {488257:489617}{461041:488241}{421601:459681}{412081:420241}], length 0
+07:27:18.207043 IP sensorgw-imx6q.35285 > 183.213.21.221.https: Flags [.], ack 318257, win 8375, options [nop,nop,sack 4 {488257:489617}{488257:489617}{461041:488241}{421601:459681}], length 0
+07:27:18.209612 IP 183.213.21.221.https > sensorgw-imx6q.35285: Flags [.], seq 490977:492337, ack 42, win 2046, length 1360
+07:27:18.212282 IP sensorgw-imx6q.35285 > 183.213.21.221.https: Flags [.], ack 318257, win 8375, options [nop,nop,sack 4 {488257:490977}{461041:488241}{421601:459681}{412081:420241}], length 0
+07:27:18.215022 IP sensorgw-imx6q.35285 > 183.213.21.221.https: Flags [.], ack 318257, win 8375, options [nop,nop,sack 4 {488257:492337}{461041:488241}{421601:459681}{412081:420241}], length 0
+07:27:18.217726 IP sensorgw-imx6q.10701 > google-public-dns-a.google.com.domain: 718+ A? awake-stats.jpush.cn. (38)
+07:27:18.221102 IP sensorgw-imx6q.53394 > 112.4.12.200.domain: 42741+ PTR? 8.8.8.8.in-addr.arpa. (38)
+07:27:18.224153 IP 183.213.21.221.https > sensorgw-imx6q.35285: Flags [.], seq 493697:495057, ack 42, win 2046, length 1360
+07:27:18.229421 IP sensorgw-imx6q.35285 > 183.213.21.221.https: Flags [.], ack 318257, win 8375, options [nop,nop,sack 4 {493697:495057}{488257:492337}{461041:488241}{421601:459681}], length 0
+07:27:18.232349 IP 112.25.83.229.https > sensorgw-imx6q.38557: Flags [.], ack 3352755509, win 1631, length 0
+07:27:18.238171 IP 183.213.21.221.https > sensorgw-imx6q.35285: Flags [.], seq 495057:496417, ack 42, win 2046, length 1360
+07:27:18.240053 IP 183.213.21.221.https > sensorgw-imx6q.35285: Flags [.], seq 496417:497777, ack 42, win 2046, length 1360
+07:27:18.309329 IP 183.213.21.221.https > sensorgw-imx6q.35285: Flags [.], seq 508657:510017, ack 42, win 2046, length 1360
+07:27:18.312744 IP sensorgw-imx6q.35285 > 183.213.21.221.https: Flags [.], ack 318257, win 8375, options [nop,nop,sack 4 {507297:508657}{504577:505937}{493697:503217}{461041:492337}], length 0
+07:27:18.314390 IP 183.213.21.221.https > sensorgw-imx6q.35285: Flags [.], seq 511377:512737, ack 42, win 2046, length 1360
+07:27:18.315216 IP sensorgw-imx6q.41505 > 112.4.12.200.domain: 55699+ PTR? 229.83.25.112.in-addr.arpa. (44)
+07:27:23.379926 IP sensorgw-imx6q.60605 > promote.cache-dns.local.http: Flags [.], ack 266905, win 5678, options [nop,nop,TS val 21077639 ecr 3911618797,nop,nop,sack 3 {291169:295213}{284429:289821}{281733:283081}], length 0
+07:27:23.384266 IP promote.cache-dns.local.http > sensorgw-imx6q.60605: Flags [.], seq 266905:268253, ack 1, win 12543, options [nop,nop,TS val 3911618806 ecr 21077635], length 1348: HTTP
+07:27:23.389101 IP promote.cache-dns.local.http > sensorgw-imx6q.60605: Flags [.], seq 280385:281733, ack 1, win 12543, options [nop,nop,TS val 3911618806 ecr 21077635], length 1348: HTTP
+07:27:23.393452 IP promote.cache-dns.local.http > sensorgw-imx6q.60605: Flags [.], seq 283081:284429, ack 1, win 12543, options [nop,nop,TS val 3911618806 ecr 21077635], length 1348: HTTP
+07:27:23.397104 IP 47.100.44.149.https > sensorgw-imx6q.41360: Flags [.], seq 1373357168:1373358468, ack 2158876735, win 65535, length 1300
+07:27:23.402620 IP sensorgw-imx6q.60605 > promote.cache-dns.local.http: Flags [.], ack 266905, win 5678, options [nop,nop,TS val 21077639 ecr 3911618797,nop,nop,sack 3 {293865:295213}{291169:295213}{284429:289821}], length 0
+07:27:23.406415 IP sensorgw-imx6q.38557 > 112.25.83.229.https: Flags [.], ack 1, win 4845, options [nop,nop,sack 4 {107840:125520}{103760:106480}{60147:102400}{57334:58787}], length 0
+07:27:23.410134 IP sensorgw-imx6q.49601 > 112.4.12.200.domain: 3840+ PTR? 149.44.100.47.in-addr.arpa. (44)
+07:27:23.413648 IP promote.cache-dns.local.http > sensorgw-imx6q.60605: Flags [.], seq 296561:297909, ack 1, win 12543, options [nop,nop,TS val 3911618810 ecr 21077638], length 1348: HTTP
+07:27:23.415315 IP sensorgw-imx6q.60605 > promote.cache-dns.local.http: Flags [.], ack 266905, win 5678, options [nop,nop,TS val 21077639 ecr 3911618797,nop,nop,sack 3 {291169:296561}{284429:289821}{281733:283081}], length 0
+07:27:23.419789 IP sensorgw-imx6q.41360 > 47.100.44.149.https: Flags [.], ack 2045, win 65535, length 0
+07:27:28.497485 IP sensorgw-imx6q.38711 > 112.25.86.32.https: Flags [.], ack 2063359132, win 4331, options [nop,nop,sack 4 {10983:12323}{8303:9643}{6776:6963}{4096:5436}], length 0
+07:27:28.502033 IP sensorgw-imx6q.38711 > 112.25.86.32.https: Flags [.], ack 1, win 4331, options [nop,nop,sack 4 {6776:6963}{4096:5436}{2706:4046}{1341:1366}], length 0
+07:27:28.505738 IP sensorgw-imx6q.48774 > 112.4.12.200.domain: 44486+ PTR? 32.86.25.112.in-addr.arpa. (43)
+07:27:28.510652 IP sensorgw-imx6q.38711 > 112.25.86.32.https: Flags [.], ack 1, win 4331, options [nop,nop,sack 4 {15362:16702}{13663:14022}{10983:12323}{8303:9643}], length 0
+07:27:28.512312 IP 112.25.86.32.https > sensorgw-imx6q.38711: Flags [P.], seq 23402:23811, ack 0, win 65472, length 409
+07:27:28.515806 IP sensorgw-imx6q.38711 > 112.25.86.32.https: Flags [.], ack 1, win 4331, options [nop,nop,sack 4 {18042:19382}{15362:16702}{13663:14022}{10983:12323}], length 0
+07:27:28.517470 IP 112.25.86.32.https > sensorgw-imx6q.38711: Flags [.], seq 25151:26491, ack 0, win 65472, length 1340
+07:27:33.615401 IP 112.25.83.229.https > sensorgw-imx6q.37399: Flags [.], seq 3417348232:3417349592, ack 814602693, win 1631, length 1360
+07:27:33.623078 IP sensorgw-imx6q.37399 > 112.25.83.229.https: Flags [.], ack 4294836736, win 3672, options [nop,nop,sack 4 {4294957776:0}{4294946896:4294948256}{4294944176:4294945536}{4294941456:4294942816}], length 0
+07:27:33.629157 IP sensorgw-imx6q.37399 > 112.25.83.229.https: Flags [.], ack 4294836736, win 3672, options [nop,nop,sack 4 {4294946896:4294949616}{4294957776:0}{4294944176:4294945536}{4294941456:4294942816}], length 0
+07:27:33.630822 IP 112.25.83.229.https > sensorgw-imx6q.37399: Flags [.], seq 4294953696:4294955056, ack 1, win 1631, length 1360
+07:27:33.634367 IP sensorgw-imx6q.37399 > 112.25.83.229.https: Flags [.], ack 4294836736, win 3672, options [nop,nop,sack 4 {4294950976:4294952336}{4294946896:4294949616}{4294957776:0}{4294944176:4294945536}], length 0
+07:27:33.636087 IP 112.25.83.229.https > sensorgw-imx6q.37399: Flags [.], seq 4294956416:4294957776, ack 1, win 1631, length 1360
+07:27:33.639846 IP 112.25.83.229.https > sensorgw-imx6q.37399: Flags [.], seq 5440:6800, ack 1, win 1631, length 1360
+07:27:33.641501 IP 112.29.148.48.https > sensorgw-imx6q.46348: Flags [P.], seq 2762854333:2762854364, ack 3485340148, win 26083, length 31
+07:27:33.644907 IP 112.25.83.229.https > sensorgw-imx6q.37399: Flags [.], seq 6800:8160, ack 1, win 1631, length 1360
+07:27:33.657400 IP 112.25.83.229.https > sensorgw-imx6q.37399: Flags [.], seq 11154:12514, ack 1, win 1631, length 1360
+07:27:33.660644 IP sensorgw-imx6q.46734 > 112.4.12.200.domain: 17967+ PTR? 48.148.29.112.in-addr.arpa. (44)
+07:27:33.664577 IP sensorgw-imx6q.37399 > 112.25.83.229.https: Flags [.], ack 4294836736, win 3672, options [nop,nop,sack 4 {4294953696:4294955056}{4294957776:1360}{4294950976:4294952336}{4294946896:4294949616}], length 0
+07:27:33.666279 IP 112.25.83.229.https > sensorgw-imx6q.37399: Flags [.], seq 12514:13874, ack 1, win 1631, length 1360
+07:27:33.669802 IP sensorgw-imx6q.37399 > 112.25.83.229.https: Flags [.], ack 4294836736, win 3672, options [nop,nop,sack 4 {4294956416:1360}{4294953696:4294955056}{4294950976:4294952336}{4294946896:4294949616}], length 0
+07:27:58.725104 IP 103.235.46.211.https > sensorgw-imx6q.59561: Flags [P.], seq 2645711466:2645712691, ack 1901343285, win 32700, length 1225
+07:27:58.729640 IP 103.235.46.211.https > sensorgw-imx6q.59561: Flags [P.], seq 1225:1259, ack 1, win 32700, length 34
+07:27:58.732209 IP sensorgw-imx6q.60564 > 112.4.12.200.domain: 8074+ PTR? 211.46.235.103.in-addr.arpa. (45)
+07:27:58.748949 IP sensorgw-imx6q.59561 > 103.235.46.211.https: Flags [.], ack 1259, win 8171, length 0
+07:27:58.752801 IP sensorgw-imx6q.50715 > 183.232.231.30.https: Flags [P.], seq 3636367995:3636369196, ack 1865922559, win 2635, length 1201
+07:27:58.768246 IP 112.4.12.200.domain > sensorgw-imx6q.60564: 8074 NXDomain 0/1/0 (134)
+07:27:58.789242 IP 183.232.231.30.https > sensorgw-imx6q.50715: Flags [.], ack 1201, win 32698, length 0
+07:28:03.777496 IP sensorgw-imx6q.50322 > 112.4.12.200.domain: 21726+ PTR? 30.231.232.183.in-addr.arpa. (45)
+07:28:03.802245 IP 112.34.112.78.https > sensorgw-imx6q.53213: Flags [.], ack 3600058631, win 32736, length 0
+07:28:03.807314 IP 112.34.112.78.https > sensorgw-imx6q.53213: Flags [P.], seq 0:340, ack 1, win 32736, length 340
+07:28:03.811106 IP sensorgw-imx6q.53363 > promote.cache-dns.local.https: Flags [P.], seq 556741395:556742457, ack 1098117278, win 1530, length 1062
+07:28:08.825085 IP sensorgw-imx6q.48040 > 112.4.12.200.domain: 16120+ PTR? 78.112.34.112.in-addr.arpa. (44)
+07:28:08.967273 IP 112.25.83.229.https > sensorgw-imx6q.37399: Flags [.], ack 1, win 1631, length 0
+07:28:08.985990 IP sensorgw-imx6q.37399 > 112.25.83.229.https: Flags [.], ack 1041912, win 7030, options [nop,nop,sack 3 {1096312:1137112}{1088152:1094952}{1079992:1084072}], length 0
+07:28:09.002872 IP sensorgw-imx6q.59903 > promote.cache-dns.local.http: Flags [F.], seq 1841133173, ack 1513855819, win 4826, options [nop,nop,TS val 21082201 ecr 3911625273,nop,nop,sack 3 {20221:28309}{17525:18873}{12133:13481}], length 0
+07:28:14.434811 IP sensorgw-imx6q.38953 > 112.4.12.200.domain: 63242+ PTR? 191.101.13.111.in-addr.arpa. (45)
+07:28:14.459256 IP 112.4.12.200.domain > sensorgw-imx6q.38953: 63242 1/0/0 PTR promote.cache-dns.local. (82)
+07:28:14.633258 IP 112.25.86.31.https > sensorgw-imx6q.44106: Flags [P.], seq 404506278:404506303, ack 842562536, win 65472, length 25
+07:28:14.639255 IP sensorgw-imx6q.39279 > 112.4.12.200.domain: 61+ PTR? 31.86.25.112.in-addr.arpa. (43)
+07:28:14.666745 IP sensorgw-imx6q.44106 > 112.25.86.31.https: Flags [.], ack 2705, win 1547, length 0
+07:28:14.673115 IP 112.4.12.200.domain > sensorgw-imx6q.39279: 61 NXDomain 0/0/0 (43)
+07:28:14.708820 IP 112.25.86.31.https > sensorgw-imx6q.44106: Flags [P.], seq 2705:2755, ack 1, win 65472, length 50
+07:28:14.712306 IP 112.25.86.31.https > sensorgw-imx6q.44106: Flags [P.], seq 2755:2892, ack 1, win 65472, length 137
+07:28:14.716617 IP 112.25.86.31.https > sensorgw-imx6q.44106: Flags [.], seq 2892:4232, ack 1, win 65472, length 1340
+07:28:19.699851 IP 112.25.104.175.http > sensorgw-imx6q.54432: Flags [.], seq 1543397556:1543398904, ack 137201758, win 12543, options [nop,nop,TS val 4278766084 ecr 21083268], length 1348: HTTP
+07:28:19.706184 IP sensorgw-imx6q.35244 > 112.4.12.200.domain: 16271+ PTR? 175.104.25.112.in-addr.arpa. (45)
+07:28:19.710066 IP sensorgw-imx6q.54432 > 112.25.104.175.http: Flags [.], ack 4294936292, win 2389, options [nop,nop,TS val 21083271 ecr 4278765864,nop,nop,sack 2 {4294963252:1348}{4294937640:4294961904}], length 0
+07:28:19.719115 IP 112.25.83.229.https > sensorgw-imx6q.37399: Flags [.], ack 1, win 1631, length 0
+07:28:19.735490 IP sensorgw-imx6q.37399 > 112.25.83.229.https: Flags [.], ack 1384696, win 8645, options [nop,nop,sack 4 {1414552:1415912}{1405096:1410472}{1396936:1403736}{1386056:1394216}], length 0
+07:28:19.739815 IP 112.25.104.175.http > sensorgw-imx6q.54432: Flags [P.], seq 1348:2696, ack 1, win 12543, options [nop,nop,TS val 4278766088 ecr 21083271], length 1348: HTTP
+07:28:19.745176 IP 112.4.12.200.domain > sensorgw-imx6q.35244: 16271 NXDomain 0/0/0 (45)
+07:28:24.752225 IP sensorgw-imx6q.44061 > 112.25.86.31.https: Flags [R], seq 1293820624, win 0, length 0
+07:28:24.757516 IP sensorgw-imx6q.44105 > 112.25.86.31.https: Flags [P.], seq 132811250:132811788, ack 1047351245, win 1760, length 538
+07:28:24.763946 IP sensorgw-imx6q.44061 > 112.25.86.31.https: Flags [R], seq 1293820624, win 0, length 0
+07:28:24.769967 IP 192.168.43.20.44060 > 112.25.86.31.https: Flags [R], seq 158662760, win 0, length 0
+07:28:24.774601 IP 192.168.43.20.44060 > 112.25.86.31.https: Flags [R], seq 158662760, win 0, length 0
+07:28:24.778328 IP sensorgw-imx6q.44503 > 112.4.12.200.domain: 64733+ PTR? 20.43.168.192.in-addr.arpa. (44)
+07:28:24.783556 IP sensorgw-imx6q.53378 > promote.cache-dns.local.https: Flags [S], seq 2652669492, win 65535, options [mss 1360,sackOK,TS val 21083777 ecr 0,nop,wscale 6], length 0
+07:28:24.787201 IP sensorgw-imx6q.44060 > 112.25.86.31.https: Flags [R], seq 158662761, win 0, length 0
+07:28:24.791123 IP promote.cache-dns.local.https > sensorgw-imx6q.53377: Flags [S.], seq 1355722662, ack 3605011409, win 65535, options [mss 1360,nop,wscale 5,sackOK,eol], length 0
+07:28:24.794540 IP 103.235.46.211.https > sensorgw-imx6q.59754: Flags [R], seq 2390182495, win 0, length 0
+07:28:29.836570 IP sensorgw-imx6q.59762 > 103.235.46.211.https: Flags [.], ack 1005116460, win 6504, length 0
+07:28:29.841588 IP promote.cache-dns.local.https > sensorgw-imx6q.53373: Flags [P.], seq 121500551:121500879, ack 3477450721, win 13053, length 328
+07:28:29.848566 IP sensorgw-imx6q.59762 > 103.235.46.211.https: Flags [.], ack 1301, win 6546, length 0
+07:28:29.854447 IP 103.235.46.211.https > sensorgw-imx6q.59761: Flags [.], seq 1511441120:1511442420, ack 1684151481, win 32664, length 1300
+07:28:29.856142 IP sensorgw-imx6q.59762 > 103.235.46.211.https: Flags [.], ack 2601, win 6589, length 0
+07:28:29.859558 IP 103.235.46.211.https > sensorgw-imx6q.59761: Flags [.], seq 1300:2600, ack 1, win 32664, length 1300
+07:28:29.863526 IP 103.235.46.211.https > sensorgw-imx6q.59761: Flags [.], seq 2600:3900, ack 1, win 32664, length 1300
+07:28:29.867070 IP 103.235.46.211.https > sensorgw-imx6q.59761: Flags [.], seq 3900:5200, ack 1, win 32664, length 1300
+07:28:29.869402 IP 103.235.46.211.https > sensorgw-imx6q.59761: Flags [.], seq 5200:6500, ack 1, win 32664, length 1300
+07:28:29.871813 IP 103.235.46.211.https > sensorgw-imx6q.59761: Flags [.], seq 6500:7800, ack 1, win 32664, length 1300
+07:28:29.874193 IP 103.235.46.211.https > sensorgw-imx6q.59761: Flags [.], seq 7800:9100, ack 1, win 32664, length 1300
+07:28:29.876709 IP 112.25.104.175.http > sensorgw-imx6q.54432: Flags [.], ack 1, win 12543, length 0
+07:28:29.879186 IP sensorgw-imx6q.59762 > 103.235.46.211.https: Flags [.], ack 3901, win 6631, length 0
+07:28:29.881926 IP sensorgw-imx6q.59762 > 103.235.46.211.https: Flags [.], ack 4816, win 6672, length 0
+07:28:29.884376 IP sensorgw-imx6q.59753 > 103.235.46.211.https: Flags [.], ack 3345885626, win 5810, length 0
+07:28:29.887093 IP sensorgw-imx6q.59753 > 103.235.46.211.https: Flags [.], ack 490, win 5810, length 0
+07:28:29.889894 IP sensorgw-imx6q.49575 > 112.25.104.175.http: Flags [.], ack 697460405, win 5172, options [nop,nop,TS val 21084289 ecr 4278763183], length 0
+07:28:29.892373 IP sensorgw-imx6q.49575 > 112.25.104.175.http: Flags [.], ack 1349, win 5214, options [nop,nop,TS val 21084290 ecr 4278763183], length 0
+07:28:29.894785 IP sensorgw-imx6q.49575 > 112.25.104.175.http: Flags [.], ack 2697, win 5256, options [nop,nop,TS val 21084290 ecr 4278763183], length 0
+07:28:29.895633 IP 112.25.86.31.https > sensorgw-imx6q.44106: Flags [P.], seq 38400:38754, ack 593, win 65472, length 354
+07:28:29.897417 IP sensorgw-imx6q.49575 > 112.25.104.175.http: Flags [.], ack 4045, win 5298, options [nop,nop,TS val 21084290 ecr 4278763183], length 0
+07:28:29.899625 IP sensorgw-imx6q.59761 > 103.235.46.211.https: Flags [.], ack 0, win 2373, length 0
+07:28:29.902140 IP sensorgw-imx6q.35285 > 183.213.21.221.https: Flags [.], ack 1811537, win 9020, options [nop,nop,sack 3 {1836017:1841457}{1842817:1859137}{1825137:1826497}], length 0
+07:28:29.904587 IP sensorgw-imx6q.35285 > 183.213.21.221.https: Flags [.], ack 1811537, win 9020, options [nop,nop,sack 3 {1836017:1841457}{1842817:1859137}{1825137:1826497}], length 0
+07:28:29.905421 IP 103.235.46.211.https > sensorgw-imx6q.59761: Flags [.], seq 9100:10400, ack 1, win 32664, length 1300
+07:28:29.907364 IP 103.235.46.211.https > sensorgw-imx6q.59761: Flags [.], seq 10400:11700, ack 1, win 32664, length 1300
+07:28:29.908194 IP 103.235.46.211.https > sensorgw-imx6q.59761: Flags [.], seq 11700:13000, ack 1, win 32664, length 1300
+07:28:29.910378 IP 103.235.46.211.https > sensorgw-imx6q.59761: Flags [.], seq 13000:14300, ack 1, win 32664, length 1300
+07:28:29.912658 IP 103.235.46.211.https > sensorgw-imx6q.59761: Flags [.], seq 14300:15600, ack 1, win 32664, length 1300
+07:28:29.915028 IP 103.235.46.211.https > sensorgw-imx6q.59761: Flags [.], seq 15600:16900, ack 1, win 32664, length 1300
+07:28:29.916775 IP sensorgw-imx6q.37399 > 112.25.83.229.https: Flags [.], ack 1562792, win 9877, options [nop,nop,sack 3 {1579112:1583192}{1564152:1577752}{1585912:1588632}], length 0
+07:28:29.917627 IP 103.235.46.211.https > sensorgw-imx6q.59761: Flags [.], seq 16900:18200, ack 1, win 32664, length 1300
+07:28:29.919320 IP sensorgw-imx6q.35285 > 183.213.21.221.https: Flags [.], ack 1811537, win 9020, options [nop,nop,sack 3 {1842817:1860497}{1836017:1841457}{1825137:1826497}], length 0
+07:28:29.920151 IP 103.235.46.211.https > sensorgw-imx6q.59761: Flags [P.], seq 18200:18672, ack 1, win 32664, length 472
+07:28:29.922371 IP 112.25.104.175.http > sensorgw-imx6q.49575: Flags [.], ack 0, win 12543, length 0
+07:28:29.926095 IP sensorgw-imx6q.35285 > 183.213.21.221.https: Flags [.], ack 1811537, win 9020, options [nop,nop,sack 3 {1842817:1861857}{1836017:1841457}{1825137:1826497}], length 0
+07:28:29.928169 IP sensorgw-imx6q.53377 > promote.cache-dns.local.https: Flags [.], ack 148, win 1275, length 0
+07:28:29.929897 IP sensorgw-imx6q.53377 > promote.cache-dns.local.https: Flags [P.], seq 518:569, ack 148, win 1275, length 51
+07:28:29.932261 IP sensorgw-imx6q.59761 > 103.235.46.211.https: Flags [.], ack 1300, win 2416, length 0
+07:28:29.935150 IP sensorgw-imx6q.59761 > 103.235.46.211.https: Flags [.], ack 2600, win 2458, length 0
+07:28:29.936002 IP 112.25.104.175.http > sensorgw-imx6q.49575: Flags [.], seq 4045:5393, ack 0, win 12543, options [nop,nop,TS val 4278763209 ecr 21084289], length 1348: HTTP
+07:28:29.937796 IP sensorgw-imx6q.59761 > 103.235.46.211.https: Flags [.], ack 3900, win 2501, length 0
+07:28:29.938642 IP 112.25.104.175.http > sensorgw-imx6q.49575: Flags [.], seq 5393:6741, ack 0, win 12543, options [nop,nop,TS val 4278763209 ecr 21084289], length 1348: HTTP
+07:28:29.940356 IP sensorgw-imx6q.59761 > 103.235.46.211.https: Flags [.], ack 5200, win 2543, length 0
+07:28:29.942758 IP 112.25.104.175.http > sensorgw-imx6q.49575: Flags [.], seq 6741:8089, ack 0, win 12543, options [nop,nop,TS val 4278763209 ecr 21084289], length 1348: HTTP
+07:28:29.944508 IP 112.25.104.175.http > sensorgw-imx6q.49575: Flags [.], seq 9437:10785, ack 0, win 12543, options [nop,nop,TS val 4278763210 ecr 21084289], length 1348: HTTP
+07:28:29.953467 IP 183.213.21.221.https > sensorgw-imx6q.35285: Flags [.], seq 1865937:1867297, ack 546, win 2046, length 1360
+07:28:29.955653 IP sensorgw-imx6q.59761 > 103.235.46.211.https: Flags [.], ack 9100, win 2671, length 0
+07:28:29.958074 IP sensorgw-imx6q.54432 > 112.25.104.175.http: Flags [.], ack 85040, win 3442, options [nop,nop,TS val 21084295 ecr 4278766867,nop,nop,sack 2 {86388:102564}{103912:109304}], length 0
+07:28:29.960475 IP sensorgw-imx6q.44106 > 112.25.86.31.https: Flags [.], ack 55410, win 2437, length 0
+07:28:29.962861 IP sensorgw-imx6q.53373 > promote.cache-dns.local.https: Flags [.], ack 328, win 1292, length 0
+07:28:29.966223 IP sensorgw-imx6q.59761 > 103.235.46.211.https: Flags [.], ack 10400, win 2713, length 0
+07:28:29.969185 IP sensorgw-imx6q.59761 > 103.235.46.211.https: Flags [.], ack 11700, win 2756, length 0
+07:28:29.971267 IP sensorgw-imx6q.59761 > 103.235.46.211.https: Flags [.], ack 13000, win 2798, length 0
+07:28:29.973731 IP sensorgw-imx6q.59761 > 103.235.46.211.https: Flags [.], ack 14300, win 2841, length 0
+07:28:29.976052 IP sensorgw-imx6q.59761 > 103.235.46.211.https: Flags [.], ack 15600, win 2883, length 0
+07:28:29.979269 IP sensorgw-imx6q.59761 > 103.235.46.211.https: Flags [.], ack 16900, win 2926, length 0
+07:28:29.980131 IP 112.25.86.31.https > sensorgw-imx6q.44106: Flags [.], seq 55410:56750, ack 593, win 65472, length 1340
+07:28:29.982504 IP 112.25.86.31.https > sensorgw-imx6q.44106: Flags [.], seq 56967:58307, ack 593, win 65472, length 1340
+07:28:29.983334 IP 112.25.86.31.https > sensorgw-imx6q.44106: Flags [P.], seq 58307:59591, ack 593, win 65472, length 1284
+07:28:29.986360 IP sensorgw-imx6q.59761 > 103.235.46.211.https: Flags [.], ack 18200, win 2968, length 0
+07:28:29.988492 IP sensorgw-imx6q.59761 > 103.235.46.211.https: Flags [.], ack 18672, win 3009, length 0
+07:28:29.990970 IP sensorgw-imx6q.49575 > 112.25.104.175.http: Flags [.], ack 4045, win 5298, options [nop,nop,TS val 21084299 ecr 4278763183], length 0
+07:28:29.994167 IP sensorgw-imx6q.49575 > 112.25.104.175.http: Flags [.], ack 5393, win 5340, options [nop,nop,TS val 21084299 ecr 4278763209], length 0
+07:28:29.995004 IP promote.cache-dns.local.https > sensorgw-imx6q.53377: Flags [.], ack 569, win 12798, length 0
+07:28:29.997891 IP sensorgw-imx6q.49575 > 112.25.104.175.http: Flags [.], ack 6741, win 5382, options [nop,nop,TS val 21084300 ecr 4278763209], length 0
+07:28:29.999699 IP sensorgw-imx6q.49575 > 112.25.104.175.http: Flags [.], ack 8089, win 5424, options [nop,nop,TS val 21084300 ecr 4278763209], length 0
+07:28:30.002598 IP sensorgw-imx6q.49575 > 112.25.104.175.http: Flags [.], ack 8089, win 5424, options [nop,nop,TS val 21084300 ecr 4278763209,nop,nop,sack 1 {9437:10785}], length 0
+07:28:30.004436 IP sensorgw-imx6q.49575 > 112.25.104.175.http: Flags [.], ack 8089, win 5424, options [nop,nop,TS val 21084300 ecr 4278763209,nop,nop,sack 1 {9437:12133}], length 0
+07:28:30.006911 IP sensorgw-imx6q.49575 > 112.25.104.175.http: Flags [.], ack 8089, win 5424, options [nop,nop,TS val 21084300 ecr 4278763209,nop,nop,sack 1 {9437:13481}], length 0
+07:28:30.009075 IP sensorgw-imx6q.49575 > 112.25.104.175.http: Flags [.], ack 8089, win 5424, options [nop,nop,TS val 21084300 ecr 4278763209,nop,nop,sack 1 {9437:14829}], length 0
+07:28:30.011578 IP sensorgw-imx6q.49575 > 112.25.104.175.http: Flags [.], ack 8089, win 5424, options [nop,nop,TS val 21084300 ecr 4278763209,nop,nop,sack 1 {9437:16177}], length 0
+07:28:30.014056 IP sensorgw-imx6q.49575 > 112.25.104.175.http: Flags [.], ack 8089, win 5424, options [nop,nop,TS val 21084301 ecr 4278763209,nop,nop,sack 1 {9437:17525}], length 0
+07:28:30.016506 IP sensorgw-imx6q.49575 > 112.25.104.175.http: Flags [.], ack 8089, win 5424, options [nop,nop,TS val 21084301 ecr 4278763209,nop,nop,sack 1 {9437:18873}], length 0
+07:28:30.018967 IP sensorgw-imx6q.35285 > 183.213.21.221.https: Flags [.], ack 1811537, win 9020, options [nop,nop,sack 3 {1842817:1863217}{1836017:1841457}{1825137:1826497}], length 0
+07:28:30.021392 IP sensorgw-imx6q.49575 > 112.25.104.175.http: Flags [.], ack 8089, win 5424, options [nop,nop,TS val 21084301 ecr 4278763209,nop,nop,sack 1 {9437:20221}], length 0
+07:28:30.022229 IP 112.25.104.175.http > sensorgw-imx6q.49575: Flags [.], seq 20221:21569, ack 0, win 12543, options [nop,nop,TS val 4278763220 ecr 21084299], length 1348: HTTP
+07:28:30.023952 IP sensorgw-imx6q.37399 > 112.25.83.229.https: Flags [.], ack 1562792, win 9877, options [nop,nop,sack 3 {1585912:1589992}{1579112:1583192}{1564152:1577752}], length 0
+07:28:30.024783 IP 112.25.104.175.http > sensorgw-imx6q.49575: Flags [.], seq 21569:22917, ack 0, win 12543, options [nop,nop,TS val 4278763220 ecr 21084300], length 1348: HTTP
+07:28:30.026682 IP 112.25.104.175.http > sensorgw-imx6q.49575: Flags [.], seq 22917:24265, ack 0, win 12543, options [nop,nop,TS val 4278763221 ecr 21084300], length 1348: HTTP
+07:28:30.028855 IP sensorgw-imx6q.35285 > 183.213.21.221.https: Flags [.], ack 1811537, win 9020, options [nop,nop,sack 4 {1865937:1867297}{1842817:1863217}{1836017:1841457}{1825137:1826497}], length 0
+07:28:30.033473 IP sensorgw-imx6q.44106 > 112.25.86.31.https: Flags [.], ack 56967, win 2480, length 0
+07:28:30.039135 IP 112.25.104.175.http > sensorgw-imx6q.49575: Flags [.], seq 24265:25613, ack 0, win 12543, options [nop,nop,TS val 4278763222 ecr 21084300], length 1348: HTTP
+07:28:30.041373 IP 112.25.104.175.http > sensorgw-imx6q.49575: Flags [.], seq 25613:26961, ack 0, win 12543, options [nop,nop,TS val 4278763222 ecr 21084300], length 1348: HTTP
+07:28:30.043706 IP 112.25.104.175.http > sensorgw-imx6q.49575: Flags [.], seq 26961:28309, ack 0, win 12543, options [nop,nop,TS val 4278763222 ecr 21084300], length 1348: HTTP
+07:28:30.046043 IP 112.25.104.175.http > sensorgw-imx6q.49575: Flags [.], seq 28309:29657, ack 0, win 12543, options [nop,nop,TS val 4278763222 ecr 21084300], length 1348: HTTP
+07:28:30.048211 IP 112.25.104.175.http > sensorgw-imx6q.49575: Flags [.], seq 31005:32353, ack 0, win 12543, options [nop,nop,TS val 4278763222 ecr 21084300], length 1348: HTTP
+07:28:30.051242 IP sensorgw-imx6q.44106 > 112.25.86.31.https: Flags [.], ack 59591, win 2522, length 0
+07:28:30.053387 IP 112.25.104.175.http > sensorgw-imx6q.49575: Flags [.], seq 33701:35049, ack 0, win 12543, options [nop,nop,TS val 4278763223 ecr 21084301], length 1348: HTTP
+07:28:30.055611 IP 112.25.104.175.http > sensorgw-imx6q.49575: Flags [.], seq 35049:36397, ack 0, win 12543, options [nop,nop,TS val 4278763223 ecr 21084301], length 1348: HTTP
+07:28:30.057361 IP 112.25.83.229.https > sensorgw-imx6q.37399: Flags [.], seq 1589992:1591352, ack 1, win 1631, length 1360
+07:28:30.058193 IP 112.25.104.175.http > sensorgw-imx6q.49575: Flags [.], seq 36397:37745, ack 0, win 12543, options [nop,nop,TS val 4278763224 ecr 21084301], length 1348: HTTP
+07:28:30.059919 IP 112.25.104.175.http > sensorgw-imx6q.49575: Flags [.], seq 37745:39093, ack 0, win 12543, options [nop,nop,TS val 4278763224 ecr 21084301], length 1348: HTTP
+07:28:30.062071 IP sensorgw-imx6q.44106 > 112.25.86.31.https: Flags [.], ack 59591, win 2522, options [nop,nop,sack 1 {58307:59591}], length 0
+07:28:30.062904 IP 112.25.104.175.http > sensorgw-imx6q.49575: Flags [.], seq 40441:41789, ack 0, win 12543, options [nop,nop,TS val 4278763224 ecr 21084301], length 1348: HTTP
+07:28:30.065319 IP 112.25.104.175.http > sensorgw-imx6q.49575: Flags [.], seq 41789:43137, ack 0, win 12543, options [nop,nop,TS val 4278763225 ecr 21084301], length 1348: HTTP
+07:28:30.068025 IP sensorgw-imx6q.49575 > 112.25.104.175.http: Flags [.], ack 8089, win 5424, options [nop,nop,TS val 21084306 ecr 4278763209,nop,nop,sack 1 {9437:21569}], length 0
+07:28:30.069791 IP sensorgw-imx6q.49575 > 112.25.104.175.http: Flags [.], ack 8089, win 5424, options [nop,nop,TS val 21084306 ecr 4278763209,nop,nop,sack 1 {9437:22917}], length 0
+07:28:30.070624 IP 112.25.104.175.http > sensorgw-imx6q.49575: Flags [.], seq 44485:45833, ack 0, win 12543, options [nop,nop,TS val 4278763225 ecr 21084301], length 1348: HTTP
+07:28:30.072393 IP sensorgw-imx6q.49575 > 112.25.104.175.http: Flags [.], ack 8089, win 5424, options [nop,nop,TS val 21084307 ecr 4278763209,nop,nop,sack 1 {9437:24265}], length 0
+07:28:30.074439 IP 112.25.104.175.http > sensorgw-imx6q.49575: Flags [.], seq 45833:47181, ack 0, win 12543, options [nop,nop,TS val 4278763226 ecr 21084301], length 1348: HTTP
+07:28:30.077030 IP 112.25.104.175.http > sensorgw-imx6q.49575: Flags [.], seq 47181:48529, ack 0, win 12543, options [nop,nop,TS val 4278763226 ecr 21084301], length 1348: HTTP
+07:28:30.079508 IP 112.25.104.175.http > sensorgw-imx6q.49575: Flags [.], seq 48529:49877, ack 0, win 12543, options [nop,nop,TS val 4278763226 ecr 21084301], length 1348: HTTP
+07:28:30.082090 IP sensorgw-imx6q.49575 > 112.25.104.175.http: Flags [.], ack 8089, win 5424, options [nop,nop,TS val 21084307 ecr 4278763209,nop,nop,sack 1 {9437:25613}], length 0
+07:28:30.085819 IP sensorgw-imx6q.49575 > 112.25.104.175.http: Flags [.], ack 8089, win 5424, options [nop,nop,TS val 21084309 ecr 4278763209,nop,nop,sack 1 {9437:26961}], length 0
+07:28:30.088148 IP sensorgw-imx6q.49575 > 112.25.104.175.http: Flags [.], ack 8089, win 5424, options [nop,nop,TS val 21084309 ecr 4278763209,nop,nop,sack 1 {9437:28309}], length 0
+07:28:30.092595 IP sensorgw-imx6q.49575 > 112.25.104.175.http: Flags [.], ack 8089, win 5424, options [nop,nop,TS val 21084310 ecr 4278763209,nop,nop,sack 1 {9437:29657}], length 0
+07:28:30.095865 IP sensorgw-imx6q.49575 > 112.25.104.175.http: Flags [.], ack 8089, win 5424, options [nop,nop,TS val 21084310 ecr 4278763209,nop,nop,sack 2 {31005:32353}{9437:29657}], length 0
+07:28:30.098103 IP 112.25.104.175.http > sensorgw-imx6q.49575: Flags [.], seq 51225:52573, ack 0, win 12543, options [nop,nop,TS val 4278763228 ecr 21084306], length 1348: HTTP
+07:28:30.100881 IP 112.25.104.175.http > sensorgw-imx6q.49575: Flags [.], seq 52573:53921, ack 0, win 12543, options [nop,nop,TS val 4278763228 ecr 21084306], length 1348: HTTP
+07:28:30.104561 IP sensorgw-imx6q.49575 > 112.25.104.175.http: Flags [.], ack 8089, win 5424, options [nop,nop,TS val 21084311 ecr 4278763209,nop,nop,sack 3 {33701:35049}{31005:32353}{9437:29657}], length 0
+07:28:30.106845 IP 112.25.104.175.http > sensorgw-imx6q.49575: Flags [.], seq 55269:56617, ack 0, win 12543, options [nop,nop,TS val 4278763229 ecr 21084307], length 1348: HTTP
+07:28:30.109520 IP sensorgw-imx6q.49575 > 112.25.104.175.http: Flags [.], ack 8089, win 5424, options [nop,nop,TS val 21084311 ecr 4278763209,nop,nop,sack 3 {33701:36397}{31005:32353}{9437:29657}], length 0
+07:28:30.111480 IP sensorgw-imx6q.37399 > 112.25.83.229.https: Flags [.], ack 1562792, win 9877, options [nop,nop,sack 3 {1585912:1591352}{1579112:1583192}{1564152:1577752}], length 0
+07:28:30.113968 IP sensorgw-imx6q.49575 > 112.25.104.175.http: Flags [.], ack 8089, win 5424, options [nop,nop,TS val 21084312 ecr 4278763209,nop,nop,sack 3 {33701:37745}{31005:32353}{9437:29657}], length 0
+07:28:30.116696 IP sensorgw-imx6q.49575 > 112.25.104.175.http: Flags [.], ack 8089, win 5424, options [nop,nop,TS val 21084312 ecr 4278763209,nop,nop,sack 3 {33701:39093}{31005:32353}{9437:29657}], length 0
+07:28:30.119393 IP sensorgw-imx6q.49575 > 112.25.104.175.http: Flags [.], ack 8089, win 5424, options [nop,nop,TS val 21084312 ecr 4278763209,nop,nop,sack 3 {40441:41789}{33701:39093}{31005:32353}], length 0
+07:28:30.121839 IP sensorgw-imx6q.49575 > 112.25.104.175.http: Flags [.], ack 8089, win 5424, options [nop,nop,TS val 21084313 ecr 4278763209,nop,nop,sack 3 {40441:43137}{33701:39093}{31005:32353}], length 0
+07:28:30.124442 IP sensorgw-imx6q.49575 > 112.25.104.175.http: Flags [.], ack 8089, win 5424, options [nop,nop,TS val 21084313 ecr 4278763209,nop,nop,sack 3 {44485:45833}{40441:43137}{33701:39093}], length 0
+07:28:30.129143 IP 112.25.104.175.http > sensorgw-imx6q.49575: Flags [.], seq 29657:31005, ack 0, win 12543, options [nop,nop,TS val 4278763231 ecr 21084311], length 1348: HTTP
+07:28:30.134828 IP sensorgw-imx6q.49575 > 112.25.104.175.http: Flags [.], ack 8089, win 5424, options [nop,nop,TS val 21084314 ecr 4278763209,nop,nop,sack 3 {44485:47181}{40441:43137}{33701:39093}], length 0
+07:28:30.139024 IP 112.25.83.229.https > sensorgw-imx6q.37399: Flags [.], seq 1591352:1592712, ack 1, win 1631, length 1360
+07:28:30.142622 IP sensorgw-imx6q.49575 > 112.25.104.175.http: Flags [.], ack 8089, win 5424, options [nop,nop,TS val 21084315 ecr 4278763209,nop,nop,sack 3 {44485:48529}{40441:43137}{33701:39093}], length 0
+07:28:30.144806 IP 112.25.104.175.http > sensorgw-imx6q.49575: Flags [.], seq 32353:33701, ack 0, win 12543, options [nop,nop,TS val 4278763233 ecr 21084312], length 1348: HTTP
+07:28:30.147542 IP sensorgw-imx6q.49575 > 112.25.104.175.http: Flags [.], ack 8089, win 5424, options [nop,nop,TS val 21084315 ecr 4278763209,nop,nop,sack 3 {44485:49877}{40441:43137}{33701:39093}], length 0
+07:28:30.149502 IP sensorgw-imx6q.49575 > 112.25.104.175.http: Flags [.], ack 8089, win 5424, options [nop,nop,TS val 21084315 ecr 4278763209,nop,nop,sack 3 {51225:52573}{44485:49877}{40441:43137}], length 0
+07:28:30.151251 IP sensorgw-imx6q.49575 > 112.25.104.175.http: Flags [.], ack 8089, win 5424, options [nop,nop,TS val 21084315 ecr 4278763209,nop,nop,sack 3 {51225:53921}{44485:49877}{40441:43137}], length 0
+07:28:30.152993 IP sensorgw-imx6q.49575 > 112.25.104.175.http: Flags [.], ack 8089, win 5424, options [nop,nop,TS val 21084315 ecr 4278763209,nop,nop,sack 3 {55269:56617}{51225:53921}{44485:49877}], length 0
+07:28:30.154790 IP 112.25.104.175.http > sensorgw-imx6q.49575: Flags [.], seq 43137:44485, ack 0, win 12543, options [nop,nop,TS val 4278763234 ecr 21084314], length 1348: HTTP
+07:28:30.181857 IP sensorgw-imx6q.49575 > 112.25.104.175.http: Flags [.], ack 8089, win 5424, options [nop,nop,TS val 21084319 ecr 4278763209,nop,nop,sack 3 {29657:31005}{55269:56617}{51225:53921}], length 0
+07:28:30.198268 IP sensorgw-imx6q.37399 > 112.25.83.229.https: Flags [.], ack 1562792, win 9877, options [nop,nop,sack 3 {1585912:1592712}{1579112:1583192}{1564152:1577752}], length 0
+07:28:30.203567 IP sensorgw-imx6q.49575 > 112.25.104.175.http: Flags [.], ack 8089, win 5424, options [nop,nop,TS val 21084321 ecr 4278763209,nop,nop,sack 3 {32353:33701}{29657:31005}{55269:56617}], length 0
+07:28:30.207805 IP sensorgw-imx6q.49575 > 112.25.104.175.http: Flags [.], ack 8089, win 5424, options [nop,nop,TS val 21084321 ecr 4278763209,nop,nop,sack 3 {43137:44485}{32353:33701}{29657:31005}], length 0
+07:28:30.212240 IP 112.25.104.175.http > sensorgw-imx6q.49575: Flags [.], seq 60661:62009, ack 0, win 12543, options [nop,nop,TS val 4278763239 ecr 21084319], length 1348: HTTP
+07:28:30.224945 IP sensorgw-imx6q.49575 > 112.25.104.175.http: Flags [.], ack 8089, win 5424, options [nop,nop,TS val 21084323 ecr 4278763209,nop,nop,sack 3 {60661:62009}{43137:44485}{32353:33701}], length 0
+07:28:30.232565 IP 112.25.104.175.http > sensorgw-imx6q.49575: Flags [.], seq 63357:64705, ack 0, win 12543, options [nop,nop,TS val 4278763241 ecr 21084321], length 1348: HTTP
+07:28:30.247101 IP 112.25.83.229.https > sensorgw-imx6q.37399: Flags [.], ack 1, win 1631, length 0
+07:28:30.252882 IP sensorgw-imx6q.49575 > 112.25.104.175.http: Flags [.], ack 8089, win 5424, options [nop,nop,TS val 21084325 ecr 4278763209,nop,nop,sack 3 {63357:64705}{60661:62009}{43137:44485}], length 0
+07:28:30.257830 IP sensorgw-imx6q.37399 > 112.25.83.229.https: Flags [.], ack 1562792, win 9877, options [nop,nop,sack 3 {1585912:1592712}{1579112:1583192}{1564152:1577752}], length 0
+07:28:30.279562 IP 112.25.104.175.http > sensorgw-imx6q.49575: Flags [.], seq 64705:66053, ack 0, win 12543, options [nop,nop,TS val 4278763246 ecr 21084325], length 1348: HTTP
+07:28:30.286146 IP sensorgw-imx6q.60357 > promote.cache-dns.local.http: Flags [P.], seq 648674386:648675385, ack 2043695201, win 1646, length 999: HTTP: GET / HTTP/1.1
+07:28:30.289139 IP sensorgw-imx6q.49575 > 112.25.104.175.http: Flags [.], ack 8089, win 5424, options [nop,nop,TS val 21084329 ecr 4278763209,nop,nop,sack 3 {63357:66053}{60661:62009}{43137:44485}], length 0
+07:28:30.292605 IP sensorgw-imx6q.50137 > 112.4.12.200.domain: 21704+ PTR? 91.100.13.111.in-addr.arpa. (44)
+07:28:30.314145 IP 112.25.104.175.http > sensorgw-imx6q.49575: Flags [.], seq 66053:67401, ack 0, win 12543, options [nop,nop,TS val 4278763250 ecr 21084329], length 1348: HTTP
+07:28:30.320400 IP sensorgw-imx6q.49575 > 112.25.104.175.http: Flags [.], ack 8089, win 5424, options [nop,nop,TS val 21084333 ecr 4278763209,nop,nop,sack 3 {63357:67401}{60661:62009}{43137:44485}], length 0
+07:28:30.327473 IP 112.25.104.175.http > sensorgw-imx6q.49575: Flags [.], ack 0, win 12543, length 0
+07:28:30.337615 IP 112.4.12.200.domain > sensorgw-imx6q.50137: 21704 1/0/0 PTR promote.cache-dns.local. (81)
+07:28:30.339519 IP 112.25.104.175.http > sensorgw-imx6q.49575: Flags [.], seq 67401:68749, ack 0, win 12543, options [nop,nop,TS val 4278763252 ecr 21084333], length 1348: HTTP
+07:28:30.343481 IP sensorgw-imx6q.49575 > 112.25.104.175.http: Flags [.], ack 8089, win 5424, options [nop,nop,TS val 21084335 ecr 4278763209,nop,nop,sack 3 {63357:67401}{60661:62009}{43137:44485}], length 0
+07:28:30.346451 IP sensorgw-imx6q.49575 > 112.25.104.175.http: Flags [.], ack 8089, win 5424, options [nop,nop,TS val 21084335 ecr 4278763209,nop,nop,sack 3 {63357:68749}{60661:62009}{43137:44485}], length 0
+07:28:30.357042 IP sensorgw-imx6q.50097 > vw-in-f188.1e100.net.5228: Flags [S], seq 1781390841, win 65535, options [mss 1360,sackOK,TS val 21084337 ecr 0,nop,wscale 6], length 0
+07:28:30.360115 IP sensorgw-imx6q.46906 > 112.4.12.200.domain: 30378+ PTR? 188.217.194.173.in-addr.arpa. (46)
+07:28:30.392830 IP 112.25.104.175.http > sensorgw-imx6q.49575: Flags [.], seq 68749:70097, ack 0, win 12543, options [nop,nop,TS val 4278763256 ecr 21084335], length 1348: HTTP
+07:28:30.401961 IP sensorgw-imx6q.49575 > 112.25.104.175.http: Flags [.], ack 8089, win 5424, options [nop,nop,TS val 21084341 ecr 4278763209,nop,nop,sack 3 {63357:70097}{60661:62009}{43137:44485}], length 0
+07:28:30.405002 IP promote.cache-dns.local.http > sensorgw-imx6q.60357: Flags [P.], seq 1:699, ack 999, win 32736, length 698: HTTP: HTTP/1.1 302 Found
+07:28:30.411654 IP sensorgw-imx6q.60357 > promote.cache-dns.local.http: Flags [.], ack 699, win 1668, length 0
+07:28:30.423320 IP 112.25.104.175.http > sensorgw-imx6q.49575: Flags [.], seq 53921:55269, ack 0, win 12543, options [nop,nop,TS val 4278763261 ecr 21084341], length 1348: HTTP
+07:28:30.625769 IP 112.25.83.229.https > sensorgw-imx6q.37399: Flags [.], seq 1592712:1594072, ack 1, win 1631, length 1360
+07:28:30.637546 IP sensorgw-imx6q.37399 > 112.25.83.229.https: Flags [.], ack 1583192, win 9962, options [nop,nop,sack 1 {1584552:1598152}], length 0
+07:28:30.752790 IP sensorgw-imx6q.28258 > google-public-dns-a.google.com.domain: 949+ A? api.accuweather.com. (37)
+07:28:30.815096 IP 183.213.21.221.https > sensorgw-imx6q.35285: Flags [.], ack 546, win 2046, length 0
+07:28:30.827003 IP sensorgw-imx6q.35285 > 183.213.21.221.https: Flags [.], ack 1811537, win 9020, options [nop,nop,sack 4 {1865937:1867297}{1842817:1863217}{1836017:1841457}{1825137:1826497}], length 0
+07:28:30.849819 IP 183.213.21.221.https > sensorgw-imx6q.35285: Flags [.], seq 1868657:1870017, ack 546, win 2046, length 1360
+07:28:30.875229 IP 112.25.104.175.http > sensorgw-imx6q.54432: Flags [.], ack 1, win 12543, length 0
+07:28:30.881059 IP sensorgw-imx6q.35285 > 183.213.21.221.https: Flags [.], ack 1811537, win 9020, options [nop,nop,sack 4 {1868657:1870017}{1865937:1867297}{1842817:1863217}{1836017:1841457}], length 0
+07:28:30.887479 IP sensorgw-imx6q.54432 > 112.25.104.175.http: Flags [.], ack 85040, win 3442, options [nop,nop,TS val 21084389 ecr 4278766867,nop,nop,sack 2 {86388:102564}{103912:109304}], length 0
+07:28:30.922821 IP 183.213.21.221.https > sensorgw-imx6q.35285: Flags [.], seq 1870017:1871377, ack 546, win 2046, length 1360
+07:28:30.929128 IP sensorgw-imx6q.11654 > google-public-dns-b.google.com.domain: 7037+ A? timgmb.bdimg.com. (34)
+07:28:30.934138 IP sensorgw-imx6q.35285 > 183.213.21.221.https: Flags [.], ack 1811537, win 9020, options [nop,nop,sack 4 {1868657:1871377}{1865937:1867297}{1842817:1863217}{1836017:1841457}], length 0
+07:28:30.937716 IP sensorgw-imx6q.55886 > 112.4.12.200.domain: 135+ PTR? 4.4.8.8.in-addr.arpa. (38)
+07:28:30.967686 IP 183.213.21.221.https > sensorgw-imx6q.35285: Flags [.], seq 1871377:1872737, ack 546, win 2046, length 1360
+07:28:30.977234 IP 112.4.12.200.domain > sensorgw-imx6q.55886: 135 1/0/0 PTR google-public-dns-b.google.com. (82)
+07:28:30.985247 IP sensorgw-imx6q.35285 > 183.213.21.221.https: Flags [.], ack 1811537, win 9020, options [nop,nop,sack 4 {1868657:1872737}{1865937:1867297}{1842817:1863217}{1836017:1841457}], length 0
+07:28:30.999223 IP 112.25.104.175.http > sensorgw-imx6q.49575: Flags [.], ack 0, win 12543, length 0
+07:28:31.007271 IP sensorgw-imx6q.49575 > 112.25.104.175.http: Flags [.], ack 8089, win 5424, options [nop,nop,TS val 21084401 ecr 4278763209,nop,nop,sack 3 {62009:78185}{57965:59313}{53921:55269}], length 0
+07:28:31.011597 IP 183.213.21.221.https > sensorgw-imx6q.35285: Flags [.], seq 1872737:1874097, ack 546, win 2046, length 1360
+07:28:31.016629 IP 183.213.21.221.https > sensorgw-imx6q.35285: Flags [.], seq 1874097:1875457, ack 546, win 2046, length 1360
+07:28:31.024507 IP sensorgw-imx6q.35285 > 183.213.21.221.https: Flags [.], ack 1811537, win 9020, options [nop,nop,sack 4 {1868657:1874097}{1865937:1867297}{1842817:1863217}{1836017:1841457}], length 0
+07:28:31.029225 IP sensorgw-imx6q.35285 > 183.213.21.221.https: Flags [.], ack 1811537, win 9020, options [nop,nop,sack 4 {1868657:1875457}{1865937:1867297}{1842817:1863217}{1836017:1841457}], length 0
+07:28:31.035315 IP 112.25.104.175.http > sensorgw-imx6q.49575: Flags [.], seq 80881:82229, ack 0, win 12543, options [nop,nop,TS val 4278763321 ecr 21084401], length 1348: HTTP
+07:28:31.037008 IP 103.235.46.211.https > sensorgw-imx6q.59761: Flags [.], seq 26333:27633, ack 1165, win 32628, length 1300
+07:28:31.040430 IP 103.235.46.211.https > sensorgw-imx6q.59761: Flags [.], seq 18672:19972, ack 1165, win 32628, length 1300
+07:28:31.042195 IP 103.235.46.211.https > sensorgw-imx6q.59761: Flags [P.], seq 27633:27698, ack 1165, win 32628, length 65
+07:28:31.045461 IP 103.235.46.211.https > sensorgw-imx6q.59761: Flags [P.], seq 19972:20037, ack 1165, win 32628, length 65
+07:28:31.047260 IP 103.235.46.211.https > sensorgw-imx6q.59761: Flags [P.], seq 27698:27810, ack 1165, win 32628, length 112
+07:28:31.050516 IP 103.235.46.211.https > sensorgw-imx6q.59761: Flags [.], seq 20037:21337, ack 1165, win 32628, length 1300
+07:28:31.055072 IP 103.235.46.211.https > sensorgw-imx6q.59761: Flags [P.], seq 21337:21402, ack 1165, win 32628, length 65
+07:28:31.059103 IP 103.235.46.211.https > sensorgw-imx6q.59761: Flags [.], seq 27810:29110, ack 1165, win 32628, length 1300
+07:28:31.060763 IP 103.235.46.211.https > sensorgw-imx6q.59761: Flags [.], seq 21402:22702, ack 1165, win 32628, length 1300
+07:28:31.064138 IP 103.235.46.211.https > sensorgw-imx6q.59761: Flags [P.], seq 29110:29175, ack 1165, win 32628, length 65
+07:28:31.065827 IP 103.235.46.211.https > sensorgw-imx6q.59761: Flags [P.], seq 22702:22767, ack 1165, win 32628, length 65
+07:28:31.069208 IP 103.235.46.211.https > sensorgw-imx6q.59761: Flags [.], seq 29175:30475, ack 1165, win 32628, length 1300
+07:28:31.070862 IP 103.235.46.211.https > sensorgw-imx6q.59761: Flags [P.], seq 22767:22884, ack 1165, win 32628, length 117
+07:28:31.077126 IP 103.235.46.211.https > sensorgw-imx6q.59761: Flags [P.], seq 23055:23603, ack 1165, win 32628, length 548
+07:28:31.080227 IP 103.235.46.211.https > sensorgw-imx6q.59761: Flags [.], seq 23603:24903, ack 1165, win 32628, length 1300
+07:28:31.082408 IP 103.235.46.211.https > sensorgw-imx6q.59761: Flags [P.], seq 24903:24968, ack 1165, win 32628, length 65
+07:28:31.084290 IP 103.235.46.211.https > sensorgw-imx6q.59761: Flags [P.], seq 30540:31008, ack 1165, win 32628, length 468
+07:28:31.085122 IP 103.235.46.211.https > sensorgw-imx6q.59761: Flags [.], seq 24968:26268, ack 1165, win 32628, length 1300
+07:28:31.086833 IP 103.235.46.211.https > sensorgw-imx6q.59761: Flags [.], seq 31008:32308, ack 1165, win 32628, length 1300
+07:28:31.087661 IP 103.235.46.211.https > sensorgw-imx6q.59761: Flags [P.], seq 26268:26333, ack 1165, win 32628, length 65
+07:28:31.089349 IP 103.235.46.211.https > sensorgw-imx6q.59761: Flags [.], seq 32308:33608, ack 1165, win 32628, length 1300
+07:28:31.091124 IP 103.235.46.211.https > sensorgw-imx6q.59761: Flags [.], seq 33608:34908, ack 1165, win 32628, length 1300
+07:28:31.096833 IP 112.25.83.229.https > sensorgw-imx6q.37399: Flags [.], ack 1, win 1631, length 0
+07:28:31.099608 IP sensorgw-imx6q.59761 > 103.235.46.211.https: Flags [.], ack 18672, win 3009, options [nop,nop,sack 1 {26333:27633}], length 0
+07:28:31.101370 IP sensorgw-imx6q.49575 > 112.25.104.175.http: Flags [.], ack 8089, win 5424, options [nop,nop,TS val 21084408 ecr 4278763209,nop,nop,sack 3 {80881:82229}{62009:78185}{57965:59313}], length 0
+07:28:31.103854 IP sensorgw-imx6q.59761 > 103.235.46.211.https: Flags [.], ack 19972, win 3051, options [nop,nop,sack 1 {26333:27633}], length 0
+07:28:31.106399 IP sensorgw-imx6q.59761 > 103.235.46.211.https: Flags [.], ack 19972, win 3051, options [nop,nop,sack 1 {26333:27698}], length 0
+07:28:31.108773 IP sensorgw-imx6q.59761 > 103.235.46.211.https: Flags [.], ack 20037, win 3051, options [nop,nop,sack 1 {26333:27698}], length 0
+07:28:31.111255 IP sensorgw-imx6q.59761 > 103.235.46.211.https: Flags [.], ack 20037, win 3051, options [nop,nop,sack 1 {26333:27810}], length 0
+07:28:31.113595 IP sensorgw-imx6q.59761 > 103.235.46.211.https: Flags [.], ack 21337, win 3094, options [nop,nop,sack 1 {26333:27810}], length 0
+07:28:31.116292 IP sensorgw-imx6q.59761 > 103.235.46.211.https: Flags [.], ack 21402, win 3094, options [nop,nop,sack 1 {26333:27810}], length 0
+07:28:31.119578 IP sensorgw-imx6q.59761 > 103.235.46.211.https: Flags [.], ack 21402, win 3094, options [nop,nop,sack 1 {26333:29110}], length 0
+07:28:31.121689 IP sensorgw-imx6q.59761 > 103.235.46.211.https: Flags [.], ack 22702, win 3136, options [nop,nop,sack 1 {26333:29110}], length 0
+07:28:31.124218 IP sensorgw-imx6q.59761 > 103.235.46.211.https: Flags [.], ack 22702, win 3136, options [nop,nop,sack 1 {26333:29175}], length 0
+07:28:31.126722 IP sensorgw-imx6q.59761 > 103.235.46.211.https: Flags [.], ack 22767, win 3136, options [nop,nop,sack 1 {26333:29175}], length 0
+07:28:31.129113 IP sensorgw-imx6q.59761 > 103.235.46.211.https: Flags [.], ack 22767, win 3136, options [nop,nop,sack 1 {26333:30475}], length 0
+07:28:31.129946 IP 112.25.104.175.http > sensorgw-imx6q.49575: Flags [.], seq 82229:83577, ack 0, win 12543, options [nop,nop,TS val 4278763331 ecr 21084408], length 1348: HTTP
+07:28:31.132678 IP sensorgw-imx6q.59761 > 103.235.46.211.https: Flags [.], ack 22884, win 3136, options [nop,nop,sack 1 {26333:30475}], length 0
+07:28:31.135044 IP sensorgw-imx6q.59761 > 103.235.46.211.https: Flags [.], ack 22884, win 3136, options [nop,nop,sack 1 {26333:30540}], length 0
+07:28:31.137540 IP 112.25.104.175.http > sensorgw-imx6q.49575: Flags [.], seq 78185:79533, ack 0, win 12543, options [nop,nop,TS val 4278763331 ecr 21084408], length 1348: HTTP
+07:28:31.139866 IP sensorgw-imx6q.59761 > 103.235.46.211.https: Flags [.], ack 23055, win 3177, options [nop,nop,sack 1 {26333:30540}], length 0
+07:28:31.142167 IP sensorgw-imx6q.59761 > 103.235.46.211.https: Flags [.], ack 23603, win 3218, options [nop,nop,sack 1 {26333:30540}], length 0
+07:28:31.144646 IP sensorgw-imx6q.59761 > 103.235.46.211.https: Flags [.], ack 24903, win 3260, options [nop,nop,sack 1 {26333:30540}], length 0
+07:28:31.147005 IP sensorgw-imx6q.59761 > 103.235.46.211.https: Flags [.], ack 24968, win 3260, options [nop,nop,sack 1 {26333:31008}], length 0
+07:28:31.149465 IP sensorgw-imx6q.59761 > 103.235.46.211.https: Flags [.], ack 24968, win 3260, options [nop,nop,sack 1 {26333:30540}], length 0
+07:28:31.151947 IP sensorgw-imx6q.59761 > 103.235.46.211.https: Flags [.], ack 26268, win 3303, options [nop,nop,sack 1 {26333:31008}], length 0
+07:28:31.154631 IP sensorgw-imx6q.59753 > 103.235.46.211.https: Flags [P.], seq 0:1151, ack 490, win 5810, length 1151
+07:28:31.157920 IP sensorgw-imx6q.59761 > 103.235.46.211.https: Flags [.], ack 26268, win 3303, options [nop,nop,sack 1 {26333:32308}], length 0
+07:28:31.160122 IP sensorgw-imx6q.59761 > 103.235.46.211.https: Flags [.], ack 32308, win 3303, length 0
+07:28:31.162427 IP sensorgw-imx6q.59761 > 103.235.46.211.https: Flags [.], ack 33608, win 3345, length 0
+07:28:31.164889 IP sensorgw-imx6q.59761 > 103.235.46.211.https: Flags [.], ack 34908, win 3388, length 0
+07:28:31.167234 IP sensorgw-imx6q.59761 > 103.235.46.211.https: Flags [.], ack 36208, win 3430, length 0
+07:28:31.169685 IP sensorgw-imx6q.59761 > 103.235.46.211.https: Flags [.], ack 37508, win 3473, length 0
+07:28:31.172000 IP sensorgw-imx6q.59761 > 103.235.46.211.https: Flags [.], ack 38094, win 3513, length 0
+07:28:31.174424 IP sensorgw-imx6q.35285 > 183.213.21.221.https: Flags [.], ack 1811537, win 9020, options [nop,nop,sack 4 {1868657:1876817}{1865937:1867297}{1842817:1863217}{1836017:1841457}], length 0
+07:28:31.176741 IP sensorgw-imx6q.35285 > 183.213.21.221.https: Flags [.], ack 1811537, win 9020, options [nop,nop,sack 3 {1836017:1863217}{1868657:1876817}{1865937:1867297}], length 0
+07:28:31.179172 IP sensorgw-imx6q.37399 > 112.25.83.229.https: Flags [.], ack 1583192, win 9962, options [nop,nop,sack 1 {1584552:1598152}], length 0
+07:28:31.181470 IP sensorgw-imx6q.49575 > 112.25.104.175.http: Flags [.], ack 8089, win 5424, options [nop,nop,TS val 21084417 ecr 4278763209,nop,nop,sack 3 {62009:79533}{80881:83577}{57965:59313}], length 0
+07:28:31.183900 IP sensorgw-imx6q.49575 > 112.25.104.175.http: Flags [.], ack 8089, win 5424, options [nop,nop,TS val 21084417 ecr 4278763209,nop,nop,sack 3 {80881:83577}{62009:78185}{57965:59313}], length 0
+^C07:28:31.186377 IP sensorgw-imx6q.51077 > 223.119.243.7.http: Flags [S], seq 351686412, win 65535, options [mss 1360,sackOK,TS val 21084417 ecr 0,nop,wscale 6], length 0
+
+376 packets captured
+19399 packets received by filter
+19005 packets dropped by kernel
+root@sensorgw-imx6q:~# ifconfig
+eth0      Link encap:Ethernet  HWaddr 00:01:02:03:04:05  
+          inet addr:192.168.1.100  Bcast:192.168.1.255  Mask:255.255.255.0
+          inet6 addr: fe80::201:2ff:fe03:405%lo/64 Scope:Link
+          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+          RX packets:1309 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:1135 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:1000 
+          RX bytes:104926 (102.4 KiB)  TX bytes:202428 (197.6 KiB)
+
+lo        Link encap:Local Loopback  
+          inet addr:127.0.0.1  Mask:255.0.0.0
+          inet6 addr: ::1%1/128 Scope:Host
+          UP LOOPBACK RUNNING  MTU:65536  Metric:1
+          RX packets:3840 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:3840 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:1 
+          RX bytes:291840 (285.0 KiB)  TX bytes:291840 (285.0 KiB)
+
+ppp0      Link encap:Point-to-Point Protocol  
+          inet addr:10.162.136.202  P-t-P:10.64.64.64  Mask:255.255.255.255
+          UP POINTOPOINT RUNNING NOARP MULTICAST  MTU:1500  Metric:1
+          RX packets:25388 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:27752 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:3 
+          RX bytes:26721296 (25.4 MiB)  TX bytes:2868208 (2.7 MiB)
+
+wlan0     Link encap:Ethernet  HWaddr 84:DD:20:75:0E:73  
+          inet addr:192.168.43.1  Bcast:192.168.43.255  Mask:255.255.255.0
+          inet6 addr: fe80::86dd:20ff:fe75:e73%lo/64 Scope:Link
+          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+          RX packets:27791 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:25662 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:1000 
+          RX bytes:3265678 (3.1 MiB)  TX bytes:27624792 (26.3 MiB)
+
+root@sensorgw-imx6q:~# route
+Kernel IP routing table
+Destination     Gateway         Genmask         Flags Metric Ref    Use Iface
+default         *               0.0.0.0         U     0      0        0 ppp0
+10.64.64.64     *               255.255.255.255 UH    0      0        0 ppp0
+192.168.1.0     *               255.255.255.0   U     0      0        0 eth0
+192.168.43.0    *               255.255.255.0   U     0      0        0 wlan0
+root@sensorgw-imx6q:~# ifconfig
+eth0      Link encap:Ethernet  HWaddr 00:01:02:03:04:05  
+          inet addr:192.168.1.100  Bcast:192.168.1.255  Mask:255.255.255.0
+          inet6 addr: fe80::201:2ff:fe03:405%lo/64 Scope:Link
+          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+          RX packets:1447 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:1269 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:1000 
+          RX bytes:115900 (113.1 KiB)  TX bytes:217420 (212.3 KiB)
+
+lo        Link encap:Local Loopback  
+          inet addr:127.0.0.1  Mask:255.0.0.0
+          inet6 addr: ::1%1/128 Scope:Host
+          UP LOOPBACK RUNNING  MTU:65536  Metric:1
+          RX packets:3840 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:3840 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:1 
+          RX bytes:291840 (285.0 KiB)  TX bytes:291840 (285.0 KiB)
+
+ppp0      Link encap:Point-to-Point Protocol  
+          inet addr:10.162.136.202  P-t-P:10.64.64.64  Mask:255.255.255.255
+          UP POINTOPOINT RUNNING NOARP MULTICAST  MTU:1500  Metric:1
+          RX packets:46211 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:49495 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:3 
+          RX bytes:52533893 (50.0 MiB)  TX bytes:4881001 (4.6 MiB)
+
+wlan0     Link encap:Ethernet  HWaddr 84:DD:20:75:0E:73  
+          inet addr:192.168.43.1  Bcast:192.168.43.255  Mask:255.255.255.0
+          inet6 addr: fe80::86dd:20ff:fe75:e73%lo/64 Scope:Link
+          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+          RX packets:49429 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:46395 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:1000 
+          RX bytes:5569794 (5.3 MiB)  TX bytes:54124280 (51.6 MiB)
+
+root@sensorgw-imx6q:~# ifconfig
+eth0      Link encap:Ethernet  HWaddr 00:01:02:03:04:05  
+          inet addr:192.168.1.100  Bcast:192.168.1.255  Mask:255.255.255.0
+          inet6 addr: fe80::201:2ff:fe03:405%lo/64 Scope:Link
+          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+          RX packets:1563 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:1336 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:1000 
+          RX bytes:124188 (121.2 KiB)  TX bytes:225262 (219.9 KiB)
+
+lo        Link encap:Local Loopback  
+          inet addr:127.0.0.1  Mask:255.0.0.0
+          inet6 addr: ::1%1/128 Scope:Host
+          UP LOOPBACK RUNNING  MTU:65536  Metric:1
+          RX packets:3840 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:3840 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:1 
+          RX bytes:291840 (285.0 KiB)  TX bytes:291840 (285.0 KiB)
+
+ppp0      Link encap:Point-to-Point Protocol  
+          inet addr:10.162.136.202  P-t-P:10.64.64.64  Mask:255.255.255.255
+          UP POINTOPOINT RUNNING NOARP MULTICAST  MTU:1500  Metric:1
+          RX packets:56863 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:60761 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:3 
+          RX bytes:66522857 (63.4 MiB)  TX bytes:5753097 (5.4 MiB)
+
+wlan0     Link encap:Ethernet  HWaddr 84:DD:20:75:0E:73  
+          inet addr:192.168.43.1  Bcast:192.168.43.255  Mask:255.255.255.0
+          inet6 addr: fe80::86dd:20ff:fe75:e73%lo/64 Scope:Link
+          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+          RX packets:60695 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:56992 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:1000 
+          RX bytes:6598318 (6.2 MiB)  TX bytes:68467580 (65.2 MiB)
+
+root@sensorgw-imx6q:~# ifconfig
+eth0      Link encap:Ethernet  HWaddr 00:01:02:03:04:05  
+          inet addr:192.168.1.100  Bcast:192.168.1.255  Mask:255.255.255.0
+          inet6 addr: fe80::201:2ff:fe03:405%lo/64 Scope:Link
+          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+          RX packets:1615 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:1387 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:1000 
+          RX bytes:127862 (124.8 KiB)  TX bytes:232004 (226.5 KiB)
+
+lo        Link encap:Local Loopback  
+          inet addr:127.0.0.1  Mask:255.0.0.0
+          inet6 addr: ::1%1/128 Scope:Host
+          UP LOOPBACK RUNNING  MTU:65536  Metric:1
+          RX packets:3840 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:3840 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:1 
+          RX bytes:291840 (285.0 KiB)  TX bytes:291840 (285.0 KiB)
+
+ppp0      Link encap:Point-to-Point Protocol  
+          inet addr:10.162.136.202  P-t-P:10.64.64.64  Mask:255.255.255.255
+          UP POINTOPOINT RUNNING NOARP MULTICAST  MTU:1500  Metric:1
+          RX packets:60193 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:64284 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:3 
+          RX bytes:70872960 (67.5 MiB)  TX bytes:6046746 (5.7 MiB)
+
+wlan0     Link encap:Ethernet  HWaddr 84:DD:20:75:0E:73  
+          inet addr:192.168.43.1  Bcast:192.168.43.255  Mask:255.255.255.0
+          inet6 addr: fe80::86dd:20ff:fe75:e73%lo/64 Scope:Link
+          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+          RX packets:64220 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:60304 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:1000 
+          RX bytes:6941343 (6.6 MiB)  TX bytes:72929527 (69.5 MiB)
+
+root@sensorgw-imx6q:~# ifconfig
+eth0      Link encap:Ethernet  HWaddr 00:01:02:03:04:05  
+          inet addr:192.168.1.100  Bcast:192.168.1.255  Mask:255.255.255.0
+          inet6 addr: fe80::201:2ff:fe03:405%lo/64 Scope:Link
+          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+          RX packets:1642 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:1426 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:1000 
+          RX bytes:130144 (127.0 KiB)  TX bytes:237354 (231.7 KiB)
+
+lo        Link encap:Local Loopback  
+          inet addr:127.0.0.1  Mask:255.0.0.0
+          inet6 addr: ::1%1/128 Scope:Host
+          UP LOOPBACK RUNNING  MTU:65536  Metric:1
+          RX packets:3840 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:3840 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:1 
+          RX bytes:291840 (285.0 KiB)  TX bytes:291840 (285.0 KiB)
+
+ppp0      Link encap:Point-to-Point Protocol  
+          inet addr:10.162.136.202  P-t-P:10.64.64.64  Mask:255.255.255.255
+          UP POINTOPOINT RUNNING NOARP MULTICAST  MTU:1500  Metric:1
+          RX packets:66704 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:71221 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:3 
+          RX bytes:79062602 (75.3 MiB)  TX bytes:6617854 (6.3 MiB)
+
+wlan0     Link encap:Ethernet  HWaddr 84:DD:20:75:0E:73  
+          inet addr:192.168.43.1  Bcast:192.168.43.255  Mask:255.255.255.0
+          inet6 addr: fe80::86dd:20ff:fe75:e73%lo/64 Scope:Link
+          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+          RX packets:71156 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:66794 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:1000 
+          RX bytes:7608794 (7.2 MiB)  TX bytes:81338284 (77.5 MiB)
+
+root@sensorgw-imx6q:~# ifconfig
+eth0      Link encap:Ethernet  HWaddr 00:01:02:03:04:05  
+          inet addr:192.168.1.100  Bcast:192.168.1.255  Mask:255.255.255.0
+          inet6 addr: fe80::201:2ff:fe03:405%lo/64 Scope:Link
+          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+          RX packets:1681 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:1468 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:1000 
+          RX bytes:133551 (130.4 KiB)  TX bytes:242902 (237.2 KiB)
+
+lo        Link encap:Local Loopback  
+          inet addr:127.0.0.1  Mask:255.0.0.0
+          inet6 addr: ::1%1/128 Scope:Host
+          UP LOOPBACK RUNNING  MTU:65536  Metric:1
+          RX packets:3840 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:3840 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:1 
+          RX bytes:291840 (285.0 KiB)  TX bytes:291840 (285.0 KiB)
+
+ppp0      Link encap:Point-to-Point Protocol  
+          inet addr:10.162.136.202  P-t-P:10.64.64.64  Mask:255.255.255.255
+          UP POINTOPOINT RUNNING NOARP MULTICAST  MTU:1500  Metric:1
+          RX packets:70542 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:75157 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:3 
+          RX bytes:83936099 (80.0 MiB)  TX bytes:6927414 (6.6 MiB)
+
+wlan0     Link encap:Ethernet  HWaddr 84:DD:20:75:0E:73  
+          inet addr:192.168.43.1  Bcast:192.168.43.255  Mask:255.255.255.0
+          inet6 addr: fe80::86dd:20ff:fe75:e73%lo/64 Scope:Link
+          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+          RX packets:75087 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:70620 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:1000 
+          RX bytes:7972965 (7.6 MiB)  TX bytes:86340957 (82.3 MiB)
+
+root@sensorgw-imx6q:~# netstat
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State       
+tcp        0    132 sensorgw_imx6q:ssh      ::ffff:192.168.1.106:56156 ESTABLISHED 
+tcp        0      0 sensorgw_imx6q:ssh      ::ffff:192.168.1.106:65503 ESTABLISHED 
+Active UNIX domain sockets (w/o servers)
+Proto RefCnt Flags       Type       State         I-Node Path
+unix  3      [ ]         DGRAM                       526 /run/systemd/notify
+unix  2      [ ]         DGRAM                       528 /run/systemd/cgroups-agent
+unix  2      [ ]         DGRAM                       541 /run/systemd/journal/syslog
+unix  6      [ ]         DGRAM                       546 /run/systemd/journal/socket
+unix  7      [ ]         DGRAM                       562 /run/systemd/journal/dev-log
+unix  2      [ ]         DGRAM                      8594 /var/run/hostapd/wlan0
+unix  3      [ ]         STREAM     CONNECTED       5443 
+unix  3      [ ]         STREAM     CONNECTED       5448 
+unix  3      [ ]         STREAM     CONNECTED       5381 /run/systemd/journal/stdout
+unix  3      [ ]         STREAM     CONNECTED       5612 
+unix  3      [ ]         STREAM     CONNECTED       5432 
+unix  2      [ ]         DGRAM                      4801 
+unix  3      [ ]         STREAM     CONNECTED       5312 
+unix  3      [ ]         DGRAM                       857 
+unix  3      [ ]         STREAM     CONNECTED       4142 /run/systemd/journal/stdout
+unix  3      [ ]         STREAM     CONNECTED       3808 
+unix  3      [ ]         DGRAM                       859 
+unix  3      [ ]         STREAM     CONNECTED       5426 
+unix  3      [ ]         STREAM     CONNECTED       4722 
+unix  3      [ ]         STREAM     CONNECTED       5521 /var/run/dbus/system_bus_socket
+unix  3      [ ]         STREAM     CONNECTED       5517 /var/run/dbus/system_bus_socket
+unix  3      [ ]         STREAM     CONNECTED       5377 /run/systemd/journal/stdout
+unix  3      [ ]         STREAM     CONNECTED       5520 /var/run/dbus/system_bus_socket
+unix  3      [ ]         STREAM     CONNECTED       5613 /run/systemd/journal/stdout
+unix  3      [ ]         DGRAM                       860 
+unix  3      [ ]         STREAM     CONNECTED       4648 /run/systemd/journal/stdout
+unix  3      [ ]         STREAM     CONNECTED       5437 
+unix  3      [ ]         STREAM     CONNECTED       5515 
+unix  3      [ ]         STREAM     CONNECTED       5444 
+unix  2      [ ]         DGRAM                      5356 
+unix  3      [ ]         STREAM     CONNECTED       4795 
+unix  2      [ ]         DGRAM                       852 
+unix  2      [ ]         DGRAM                      3810 
+unix  3      [ ]         DGRAM                       858 
+unix  3      [ ]         STREAM     CONNECTED        726 /run/systemd/journal/stdout
+unix  3      [ ]         STREAM     CONNECTED       4647 
+unix  2      [ ]         DGRAM                      5428 
+unix  2      [ ]         DGRAM                      8615 
+unix  2      [ ]         DGRAM                      8288 
+unix  3      [ ]         STREAM     CONNECTED       5522 /var/run/dbus/system_bus_socket
+unix  3      [ ]         STREAM     CONNECTED       4871 
+unix  2      [ ]         DGRAM                      5440 
+unix  3      [ ]         STREAM     CONNECTED       4141 
+unix  3      [ ]         STREAM     CONNECTED       4796 /run/systemd/journal/stdout
+unix  3      [ ]         STREAM     CONNECTED       5516 
+unix  3      [ ]         STREAM     CONNECTED       5357 
+unix  2      [ ]         DGRAM                       636 
+unix  3      [ ]         DGRAM                      3882 
+unix  2      [ ]         DGRAM                       738 
+unix  3      [ ]         DGRAM                      3881 
+unix  3      [ ]         STREAM     CONNECTED       4723 /run/systemd/journal/stdout
+unix  3      [ ]         STREAM     CONNECTED       5454 /run/systemd/journal/stdout
+root@sensorgw-imx6q:~# netstat -a
+Active Internet connections (servers and established)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State       
+tcp        0      0 :::ssh                  :::*                    LISTEN      
+tcp        0    132 sensorgw_imx6q:ssh      ::ffff:192.168.1.106:56156 ESTABLISHED 
+tcp        0      0 sensorgw_imx6q:ssh      ::ffff:192.168.1.106:65503 ESTABLISHED 
+udp        0      0 0.0.0.0:bootps          0.0.0.0:*                           
+udp        0      0 0.0.0.0:mdns            0.0.0.0:*                           
+udp        0      0 0.0.0.0:54043           0.0.0.0:*                           
+udp        0      0 :::mdns                 :::*                                
+udp        0      0 :::58611                :::*                                
+Active UNIX domain sockets (servers and established)
+Proto RefCnt Flags       Type       State         I-Node Path
+unix  3      [ ]         DGRAM                       526 /run/systemd/notify
+unix  2      [ ]         DGRAM                       528 /run/systemd/cgroups-agent
+unix  2      [ ACC ]     STREAM     LISTENING        530 /run/systemd/private
+unix  2      [ ]         DGRAM                       541 /run/systemd/journal/syslog
+unix  2      [ ACC ]     STREAM     LISTENING        544 /run/systemd/journal/stdout
+unix  6      [ ]         DGRAM                       546 /run/systemd/journal/socket
+unix  7      [ ]         DGRAM                       562 /run/systemd/journal/dev-log
+unix  2      [ ACC ]     SEQPACKET  LISTENING        648 /run/udev/control
+unix  2      [ ]         DGRAM                      8594 /var/run/hostapd/wlan0
+unix  2      [ ACC ]     STREAM     LISTENING       4528 /var/run/rpcbind.sock
+unix  2      [ ACC ]     STREAM     LISTENING       4541 /var/run/dbus/system_bus_socket
+unix  2      [ ACC ]     STREAM     LISTENING       4546 /var/run/avahi-daemon/socket
+unix  3      [ ]         STREAM     CONNECTED       5443 
+unix  3      [ ]         STREAM     CONNECTED       5448 
+unix  3      [ ]         STREAM     CONNECTED       5381 /run/systemd/journal/stdout
+unix  3      [ ]         STREAM     CONNECTED       5612 
+unix  3      [ ]         STREAM     CONNECTED       5432 
+unix  2      [ ]         DGRAM                      4801 
+unix  3      [ ]         STREAM     CONNECTED       5312 
+unix  3      [ ]         DGRAM                       857 
+unix  3      [ ]         STREAM     CONNECTED       4142 /run/systemd/journal/stdout
+unix  3      [ ]         STREAM     CONNECTED       3808 
+unix  3      [ ]         DGRAM                       859 
+unix  3      [ ]         STREAM     CONNECTED       5426 
+unix  3      [ ]         STREAM     CONNECTED       4722 
+unix  3      [ ]         STREAM     CONNECTED       5521 /var/run/dbus/system_bus_socket
+unix  3      [ ]         STREAM     CONNECTED       5517 /var/run/dbus/system_bus_socket
+unix  3      [ ]         STREAM     CONNECTED       5377 /run/systemd/journal/stdout
+unix  3      [ ]         STREAM     CONNECTED       5520 /var/run/dbus/system_bus_socket
+unix  3      [ ]         STREAM     CONNECTED       5613 /run/systemd/journal/stdout
+unix  3      [ ]         DGRAM                       860 
+unix  3      [ ]         STREAM     CONNECTED       4648 /run/systemd/journal/stdout
+unix  3      [ ]         STREAM     CONNECTED       5437 
+unix  3      [ ]         STREAM     CONNECTED       5515 
+unix  3      [ ]         STREAM     CONNECTED       5444 
+unix  2      [ ]         DGRAM                      5356 
+unix  3      [ ]         STREAM     CONNECTED       4795 
+unix  2      [ ]         DGRAM                       852 
+unix  2      [ ]         DGRAM                      3810 
+unix  3      [ ]         DGRAM                       858 
+unix  3      [ ]         STREAM     CONNECTED        726 /run/systemd/journal/stdout
+unix  3      [ ]         STREAM     CONNECTED       4647 
+unix  2      [ ]         DGRAM                      5428 
+unix  2      [ ]         DGRAM                      8615 
+unix  2      [ ]         DGRAM                      8288 
+unix  3      [ ]         STREAM     CONNECTED       5522 /var/run/dbus/system_bus_socket
+unix  3      [ ]         STREAM     CONNECTED       4871 
+unix  2      [ ]         DGRAM                      5440 
+unix  3      [ ]         STREAM     CONNECTED       4141 
+unix  3      [ ]         STREAM     CONNECTED       4796 /run/systemd/journal/stdout
+unix  3      [ ]         STREAM     CONNECTED       5516 
+unix  3      [ ]         STREAM     CONNECTED       5357 
+unix  2      [ ]         DGRAM                       636 
+unix  3      [ ]         DGRAM                      3882 
+unix  2      [ ]         DGRAM                       738 
+unix  3      [ ]         DGRAM                      3881 
+unix  3      [ ]         STREAM     CONNECTED       4723 /run/systemd/journal/stdout
+unix  3      [ ]         STREAM     CONNECTED       5454 /run/systemd/journal/stdout
+root@sensorgw-imx6q:~# netstat -i
+netstat: invalid option -- 'i'
+BusyBox v1.24.1 (2018-04-26 15:39:55 CST) multi-call binary.
+
+Usage: netstat [-ral] [-tuwx] [-en]
+root@sensorgw-imx6q:~# netstat -s
+netstat: invalid option -- 's'
+BusyBox v1.24.1 (2018-04-26 15:39:55 CST) multi-call binary.
+
+Usage: netstat [-ral] [-tuwx] [-en]
+root@sensorgw-imx6q:~# netstat -n
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State       
+tcp        0      0 ::ffff:192.168.1.100:22 ::ffff:192.168.1.106:56156 ESTABLISHED 
+tcp        0      0 ::ffff:192.168.1.100:22 ::ffff:192.168.1.106:65503 ESTABLISHED 
+Active UNIX domain sockets (w/o servers)
+Proto RefCnt Flags       Type       State         I-Node Path
+unix  3      [ ]         DGRAM                       526 /run/systemd/notify
+unix  2      [ ]         DGRAM                       528 /run/systemd/cgroups-agent
+unix  2      [ ]         DGRAM                       541 /run/systemd/journal/syslog
+unix  6      [ ]         DGRAM                       546 /run/systemd/journal/socket
+unix  7      [ ]         DGRAM                       562 /run/systemd/journal/dev-log
+unix  2      [ ]         DGRAM                      8594 /var/run/hostapd/wlan0
+unix  3      [ ]         STREAM     CONNECTED       5443 
+unix  3      [ ]         STREAM     CONNECTED       5448 
+unix  3      [ ]         STREAM     CONNECTED       5381 /run/systemd/journal/stdout
+unix  3      [ ]         STREAM     CONNECTED       5612 
+unix  3      [ ]         STREAM     CONNECTED       5432 
+unix  2      [ ]         DGRAM                      4801 
+unix  3      [ ]         STREAM     CONNECTED       5312 
+unix  3      [ ]         DGRAM                       857 
+unix  3      [ ]         STREAM     CONNECTED       4142 /run/systemd/journal/stdout
+unix  3      [ ]         STREAM     CONNECTED       3808 
+unix  3      [ ]         DGRAM                       859 
+unix  3      [ ]         STREAM     CONNECTED       5426 
+unix  3      [ ]         STREAM     CONNECTED       4722 
+unix  3      [ ]         STREAM     CONNECTED       5521 /var/run/dbus/system_bus_socket
+unix  3      [ ]         STREAM     CONNECTED       5517 /var/run/dbus/system_bus_socket
+unix  3      [ ]         STREAM     CONNECTED       5377 /run/systemd/journal/stdout
+unix  3      [ ]         STREAM     CONNECTED       5520 /var/run/dbus/system_bus_socket
+unix  3      [ ]         STREAM     CONNECTED       5613 /run/systemd/journal/stdout
+unix  3      [ ]         DGRAM                       860 
+unix  3      [ ]         STREAM     CONNECTED       4648 /run/systemd/journal/stdout
+unix  3      [ ]         STREAM     CONNECTED       5437 
+unix  3      [ ]         STREAM     CONNECTED       5515 
+unix  3      [ ]         STREAM     CONNECTED       5444 
+unix  2      [ ]         DGRAM                      5356 
+unix  3      [ ]         STREAM     CONNECTED       4795 
+unix  2      [ ]         DGRAM                       852 
+unix  2      [ ]         DGRAM                      3810 
+unix  3      [ ]         DGRAM                       858 
+unix  3      [ ]         STREAM     CONNECTED        726 /run/systemd/journal/stdout
+unix  3      [ ]         STREAM     CONNECTED       4647 
+unix  2      [ ]         DGRAM                      5428 
+unix  2      [ ]         DGRAM                      8615 
+unix  2      [ ]         DGRAM                      8288 
+unix  3      [ ]         STREAM     CONNECTED       5522 /var/run/dbus/system_bus_socket
+unix  3      [ ]         STREAM     CONNECTED       4871 
+unix  2      [ ]         DGRAM                      5440 
+unix  3      [ ]         STREAM     CONNECTED       4141 
+unix  3      [ ]         STREAM     CONNECTED       4796 /run/systemd/journal/stdout
+unix  3      [ ]         STREAM     CONNECTED       5516 
+unix  3      [ ]         STREAM     CONNECTED       5357 
+unix  2      [ ]         DGRAM                       636 
+unix  3      [ ]         DGRAM                      3882 
+unix  2      [ ]         DGRAM                       738 
+unix  3      [ ]         DGRAM                      3881 
+unix  3      [ ]         STREAM     CONNECTED       4723 /run/systemd/journal/stdout
+unix  3      [ ]         STREAM     CONNECTED       5454 /run/systemd/journal/stdout
+root@sensorgw-imx6q:~# clear;
+root@sensorgw-imx6q:~# 

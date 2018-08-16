@@ -1,0 +1,87 @@
+Hardware: liu tong;  Software: Zhu Siqiang;
+
+淘宝上购买： GPS有源天线SMA接口
+GPS目前收不到数据因为信号太低，只能通过有源天线+飞线才能获取到数据(需要更换电感)，飞线的目的是让GPS口对外供电; 或者加1个功放模块，放大接收信号;
+方案咨询硬件同事 yuki.wu@nokia-sbell.com;
+
+
+硬件：EC20，EC20是移远一款带有GPS功能的LTE模块，可以收发数据，短信，打电话;
+<Quectel_EC20_GNSS_AT_Commands_Manual_V1.0.pdf> GPS指令手册
+<Quectel_EC20_R2.0_AT_Commands_Manual_V1.1.pdf> LTE指令手册  http://www.quectel.com/cn/product/ec20r20.htm
+http://aprs.gids.nl/nmea/  GPS - NMEA sentence information
+
+LTE芯片也输出GPS信号，设置iptables后所有来自有线网口和Wifi网卡的数据都会转发到LTE出口
+LTE芯片对外输出信号：a)数据，物理上通过USB总线到CPU，逻辑上是socket读写; b)使能信号，连接FPGA引脚，通过FPGA寄存器读写; c)AT控制信号,ttyUSB读写;
+（设置转发规则: echo 1 > /proc/sys/net/ipv4/ip_forward;  iptables -t nat -A POSTROUTING -o ppp0 -j MASQUERADE  ;  ppp0就是LTE芯片的networkInterface）
+LTE 对应用层的接口是socket IP(ifconfig:ppp0), 物理上是通过USB总线传输数据到CPU，LTE芯片使能是通过FPGA pin来控制，LTE芯片的控制AT命令是通过ttyUSB2交互；
+
+tcpdump -i ppp0  监控ppp0口的网络包
+
+/dev/ttyUSB0
+/dev/ttyUSB1 : GPS数据输出
+/dev/ttyUSB2 : AT command, eg: 4G--2G handover,上电后会自动轮询4g/3g/2g网络；
+/dev/ttyUSB3 : ppp0
+
+a)	Start LTE:
+/usr/share/ec20r2.0/lte_poweron.sh
+b)	Attach to the Network:
+/usr/bin/start_lte  这一步如果提示wait for ppp0 up，说明没有插入SIM卡;
+c)	Stop LTE:
+/usr/share/ec20r2.0/lte_poweroff.sh
+
+GPS based on LTE: 可以用 "AT+QGPSCFG" 配置GPS输出内容
+microcom -s 115200 /dev/ttyUSB2    启动软件microcom,打开回显(ate1), 按ctrl+x退出;
+a)	Start GPS(need start LTE first)
+AT+QGPS=1
+b)	Check position ,GPS数据对比:  http://www.gpsspg.com/maps.htm
+AT+QGPSLOC=?  命令执行成功后会返回OK，通过 cat /dev/ttyUSB1 查看GPS输出;(GPGGA 这一行是经纬度，默认1s刷新)
+c)	Stop GPS
+AT+QGPSEND
+
+other)
+AT+QGPSCFG="outport"  查询（省略第2个参数）
+AT+QGPSCFG="outport","uartdebug" 设置(逗号分隔)
+AT+QCFG="gprsattach"
+AT+QCFG="nwscanmode"  return 0=auto;    
+AT+QCFG="nwscanmode",1,1 立即切换到GSM，会释放旧的ip，需要再次执行attach脚本，才会申请新ip; 查询(AT+QNWINFO)结果为: "EDGE","46000","GSM 1800";从2G到4G不需要执行attch脚本就会自动更新ip; 模式修改后会保存断电依然有效;
+AT+QCFG="nwscanseq"   return 0403020105=lte,wcdma,tds-cdma,gsm,cdma
+
+AT+QNWINFO  : return "TDD LTE","46000","LTE BAND 38",37900 查询当前入网小区信息
+AT+QSPN  ; return CHINA MOBILE","CMCC
+AT+CSQ ; return rssi=31,bler=99
+
+///////Log
+root@sensorgw-imx6q:~# ifconfig
+ppp0      Link encap:Point-to-Point Protocol  
+          inet addr:10.230.46.20  P-t-P:10.64.64.64  Mask:255.255.255.255
+          UP POINTOPOINT RUNNING NOARP MULTICAST  MTU:1500  Metric:1
+          RX packets:65 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:91 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:3 
+          RX bytes:5362 (5.2 KiB)  TX bytes:5914 (5.7 KiB)
+
+root@sensorgw-imx6q:~# route
+Kernel IP routing table
+Destination     Gateway         Genmask         Flags Metric Ref    Use Iface
+default         *               0.0.0.0         U     0      0        0 ppp0
+10.64.64.64     *               255.255.255.255 UH    0      0        0 ppp0
+192.168.1.0     *               255.255.255.0   U     0      0        0 eth0
+192.168.43.0    *               255.255.255.0   U     0      0        0 wlan0
+
+AT+QGPSLOC=?
++QGPSLOC: <UTC>,<latitude>,<longitude>,<hdop>,<altitude>,<fix>,<cog>,<spkm>,<spkn>,<date>,<nsat> 
+$GPGGA,   033206.00,3205.096326,N,11846.353603,E,1,06,1.0,11.3,M,2.0,M,,*68 ;
+解析: utc time=03:32:06 ;latitude=32.05N;longitude=118.46E; 朗讯位置正确; 时间也正确;格式参考手册Page16
+
+hz:
+$GPGGA,084640.00,3011.452714,N,12010.013108,E,1,10,0.6,-13.7,M,7.0,M,,*41
+$GPVTG,172.2,T,176.6,M,0.0,N,0.0,K,A*23
+$GPRMC,084640.00 UTC时间,A,3011.452714,N,12010.013108,E,0.0,172.2,110518日期,4.4,W,A*28  
+$GPGSA,A,2,01,07,08,11,17,18,19,22,28,30,,,1.0,0.6,0.8*3C
+$GPGSV,4,1,13,01,55,032,32,03,40,122,24,06,11,227,21,07,21,196,40*73
+$GPGSV,4,2,13,08,17,075,31,11,45,040,32,17,29,295,43,18,29,040,22*75
+$GPGSV,4,3,13,19,11,281,40,22,39,087,34,28,64,331,29,30,35,224,30*79
+$GPGSV,4,4,13,38,,,34*77
+$GPGGA,084641.00,3011.452721,N,12010.013133,E,1,10,0.6,-13.7,M,7.0,M,,*4E
+
+

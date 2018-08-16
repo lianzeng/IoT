@@ -1,0 +1,56 @@
+#!/bin/sh
+
+if [ ! -d /lib/firmware/ti-connectivity ]; then
+    mkdir -p /lib/firmware/ti-connectivity
+fi
+
+if [ ! -e /lib/firmware/ti-connectivity/TIInit_6.12.26.bts ]; then
+    if [ ! -e /usr/firmwares/TIInit_6.12.26.bts ]; then
+        echo "ERROR: no firmware file found"
+        exit 1
+    fi
+    ln -s /usr/firmwares/TIInit_6.12.26.bts /lib/firmware/ti-connectivity/TIInit_6.12.26.bts
+fi
+
+
+diff /usr/bluez/bluetooth.conf /etc/dbus-1/system.d/bluetooth.conf >/dev/null
+if [ $? -eq 0 ]; then
+    echo "no configure update"
+else 
+    cp /usr/bluez/bluetooth.conf /etc/dbus-1/system.d/bluetooth.conf
+    killall -1 dbus-daemon
+fi
+
+killall -9 hciattach
+killall -9 ble_agent
+
+wmem 8000032 5a 2 
+sleep 2
+wmem 8000032 a5 2 
+
+sleep 1
+hciattach /dev/ttyS4 texas 115200 noflow
+
+sleep 1
+killall -9 bluetoothd
+
+sleep 1
+/usr/libexec/bluetooth/bluetoothd -C &
+
+sleep 1
+sdptool add NAP
+
+brctl addbr br0 
+ifconfig br0 192.168.3.131
+
+sleep 1
+hciconfig hci0 name sensorgw
+
+hciconfig hci0 piscan
+hciconfig hci0 sspmode 0
+
+ble_agent 0000 &
+
+# LED Control
+/usr/bin/wmem 0x80000AC 0x02 2
+

@@ -1,0 +1,106 @@
+ssh localhost //check port22
+
+linuxpc(impact):impact-node, 14:AB:C5:D9:CC:B2
+mywinPC   :80:00:0b:58:45:5c
+sensorgw : BD Address: 98:5D:AD:11:E6:31
+honor5c bdaddr :  D4:A1:48:5E:BE:73
+ELM327 OBDII: 00:1D:A5:68:98:8B ;spp serial port com7,  pin code:1234 用pc上的PCMSCAN软件可以连接ELM327，并采集到数据（发动机转速）;
+
+http://www.ti.com/product/CC2564C/technicaldocuments
+http://processors.wiki.ti.com/index.php/CC256x
+http://processors.wiki.ti.com/index.php/CC256x_TI_Bluetooth_Stack_SPPDemo_App
+http://processors.wiki.ti.com/index.php/CC256x_TI_Bluetooth_Stack_SPPLEDemo_App
+https://superuser.com/questions/465472/how-to-connect-bluetooth-headset-via-command-line-on-ubuntu-12-04  bluetoothctl,good
+https://wiki.archlinux.org/index.php/Bluetooth_headset good
+https://wiki.archlinux.org/index.php/bluetooth good
+Install the bluez and bluez-utils packages. The bluez package provides the Bluetooth protocol stack, and the bluez-utils package provides the bluetoothctl utility.
+
+bluetoothd 和  ble_agent 0000 这2个蓝牙的daemon进程要开机启动
+ 
+hciattach /dev/ttyS4 texas 115200 noflow
+hcidump -X 查看蓝牙芯片的log
+hcidump -i hci0 -X 蓝牙抓包
+hciconfig
+bluetoothctl 很强大, power on,agent on, default-agent, scan on/off 扫描， pair <bdaddr>配对中要求输入pin code, connect <bdaddr>连接, exit;
+bluetoothctl 可以记住曾经pair过的设备;
+bluetoothctl -v 5.41
+用 bluetoothctl 成功连接上手机,但不能连接OBD;
+rfcomm connect 0 00:1D:A5:68:98:8B 1  成功连接OBD: Connected /dev/rfcomm0 to 00:1D:A5:68:98:8B on channel 1
+断开连接方式: 先用 hcitool dc 断开连接，然后 ctrl+C 退出rfcomm;而且连接要保持10s以后再断开，不然再次连接会出问题;
+echo -e "ATZ\r" >/dev/rfcomm0 输入命令给ELM327
+echo -e "ATSP8\r" >/dev/rfcomm0
+echo -e "ATDP\r" >/dev/rfcomm0  信号OBD协议
+echo -e "0100\r" >/dev/rfcomm0
+echo -e "010D\r" >/dev/rfcomm0 车速,byte3
+echo -e "010C\r" >/dev/rfcomm0 发动机转速,byte3&4/4;
+echo -e "03\r" >/dev/rfcomm0  读取故障码
+microcom -s 115200 /dev/rfcomm0  和ELM327通信，设置波特率115200,不能用cat;
+BusyBox 是一个集成了三百多个最常用Linux命令和工具的软件,嵌入式系统的瑞士军刀
+/////////////////
+a)/usr/bin/start_blu
+b)hcitool scan //result: 00:1D:A5:68:98:8B       OBDII 这个命令有时候扫描不到OBD?
+c)hcitool cc  00:1D:A5:68:98:8B 执行这步失败，从 hcidump -X  看到出错
+d)rfcomm connect 0 00:1D:A5:68:98:8B 1  成功连接OBD: Connected /dev/rfcomm0 to 00:1D:A5:68:98:8B on channel 1
+//////////////////
+
+3.2.4.5	BlueTooth (Wu Shengli)
+
+1.	To use traditional bluetooth function with PAN profile:
+    a)/usr/bin/start_blu //set name to "sensorgw"  
+	Then the board could be discovered by other bluetooth device, and there is a local interface created with IP address, 192.168.3.131. Linux command could be used to configure it.
+	Use other bluetooth device to pair (pass code:0000)
+	Use other bluetooth device to connect
+	Configure the bluetooth device to proper IP address, then they could send IP traffic use bluetooth device.
+
+2.	To use BLE function
+	After system is up, run command /usr/bin/start_ble
+	hcitool scan, to find your device
+	gatttool -I //input "help" within interactive mode,only valid for LE mode, not valid for BLU mode;
+	hcitool con  //Display active connections
+	hcitool dc <bdaddr>  //Disconnect from remote device
+	hcitool info <bdaddr> //Get info from remote device
+	Then get your information needed.
+
+3.	To stop
+	Run command /usr/bin/stop_ble
+
+首先，主设备（master,即发起连接的设备）会寻呼（page）从设备（slave,接收连接的设备），master会已跳频的方式去寻呼slave,slave会固定间隔地去扫描（scan）外部寻呼，即page scan，当scan 到外部page时便会响应response该page,这样两个设备之间便会建立link的连接，即ACL链路的连接。当ACL 链路连接建立后，主设备会发起channel的连接请求，即L2CAP的连接，建立L2CAP的连接之后，主设备采用SDP去查询从设备的免提服务，从中得到rfcomm的通道号，然后主设备会发起rfcomm的连接请求建立rfcomm的连接。然后就建立了应用的连接。
+即link establish->channel establish->rfcomm establish->connection
+
+Sensor主动连接手机成功后(hcitool con):
+  < ACL D4:A1:48:5E:BE:73 handle 1 state 1 lm MASTER AUTH ENCRYPT 
+
+root@sensorgw-imx6q:/usr/bin# bluetoothctl
+[NEW] Controller 98:5D:AD:11:E6:31 sensorgw [default]
+[NEW] Device D4:A1:48:5E:BE:73 Honor5C
+[NEW] Device 80:00:0B:58:45:5C 5CG5010H17
+[bluetooth]# power on
+Changing power on succeeded
+[bluetooth]# agent on
+Agent registered
+[bluetooth]# default-agent
+Default agent request successful
+[bluetooth]# scan on
+Discovery started
+[NEW] Device 00:1D:A5:68:98:8B OBDII
+[bluetooth]# pair 00:1D:A5:68:98:8B 发起配对请求
+Attempting to pair with 00:1D:A5:68:98:8B  ,如果曾经配对过，可能会提示"Failed to pair: org.bluez.Error.AlreadyExists"，不影响连接；
+[CHG] Device 00:1D:A5:68:98:8B Connected: yes
+Request PIN code   要求输入pin code 
+[agent] Enter PIN code: 1234
+[CHG] Device 00:1D:A5:68:98:8B UUIDs: 00001101-0000-1000-8000-00805f9b34fb
+[CHG] Device 00:1D:A5:68:98:8B Paired: yes
+Pairing successful 配对成功
+[CHG] Device 00:1D:A5:68:98:8B Connected: no 
+[bluetooth]# connect 00:1D:A5:68:98:8B 发起连接请求
+Attempting to connect to 00:1D:A5:68:98:8B
+[CHG] Device 00:1D:A5:68:98:8B Connected: yes 短暂的连接成功了；
+Failed to connect: org.bluez.Error.NotAvailable  出错了
+[CHG] Device 00:1D:A5:68:98:8B Connected: no 连接失败
+
+root@sensorgw-imx6q:~# rfcomm connect 0  00:1D:A5:68:98:8B 1 用rfcomm工具连接成功obd
+Connected /dev/rfcomm0 to 00:1D:A5:68:98:8B on channel 1
+Press CTRL-C for hangup
+root@sensorgw-imx6q:~# hcitool con 显示连接结果，连接成功后才有设备文件/dev/rfcomm0;
+Connections:
+< ACL 00:1D:A5:68:98:8B handle 1 state 1 lm MASTER 
