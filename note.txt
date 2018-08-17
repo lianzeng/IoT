@@ -1,0 +1,71 @@
+0.https://github.com/donnemartin/system-design-primer  系统设计入门，非常适合快速学习架构，应对面试
+0.https://www.kancloud.cn/digest/yocto/138624 Yocto实用技巧，采用问答形式，把最常见的疑问解答了，讲的特清楚；
+https://blog.csdn.net/column/details/yocto-project.html  Yocto项目实践
+http://doc.mbalib.com/downloadtransition/621459b5db072eea433fe800e0beae84.html   新能源电动厢式物流运输车全流程智能车队管理技术及价值,这篇文章类似我们的项目；
+0.http://study.163.com/course/courseMain.htm?courseId=890008  最适合入门的嵌入式Linux视频，涉及到GPIO，UART,I2C,SPI;
+0.技术选型：参考文章: https://www.jianshu.com/p/7409866426ec
+0.Arduino: 一个开源的软硬件开发平台，听说比较流行；
+0.一个嵌入式Linux的主要软件构成： uboot(bootloader) + kernel + rootfs;
+手机上有的设备： GPS，蓝牙，音频，摄像头，Wifi, 陀螺仪，LTE;
+0.SensorGW系统用的是开源的Yocto Linux + Kura 搭建的，Kura本身支持MQTT，需要扩展支持lwm2m, 裁剪后的Kura大小为373MB;
+1.OBD ISO15765协议是问答式的，J1939协议是广播式的；目前ELM327 Vgate icar2 OBD蓝牙支持所有协议，价格60元；
+1.蓝牙ELM327编程：设备文件/dev/rfcomm0(蓝牙配对成功之后才有), 串口通信，波特率115200;
+1.6LowPan(ivp6): 无线传输协议，传输500米，山体滑坡在山体下埋了震动传感器，通过6LowPan传输到Gateway(可以接收12个node), 然后Gateway再通过lwm2m+NBIoT传输到lwm2mServer;
+1.服务器后端用sprint boot 搭建，基于 restful API 和 Impact 平台交互；
+2.Java服务端比较流行的框架： Spring, Hibernate, Mybatis
+3.Java与数据库交互： JDBC(connection, Statement, Resultset)
+2.Web服务器和Browser数据交互有3种方式：a)浏览器通过周期性的主动轮询来获取数据；b)服务器主动push数据到Broswer，采用websocket通信; c)http长轮询：服务器收到httpRequest后hold住一段时间，直到有数据需要发送或者超时再返回； refer to: https://kuaibao.qq.com/s/20180518B1N0WZ00?refer=spider
+
+4.物联网领域的数据库：也称为时序数据库， 开源的有 ：  InfluxDB(不支持集群),   OpenTSDB ; 我们选择的数据库是(redis,mongodb),  选择mongodb的理由: a)MongoDB 相比 MySQL，它的数据结构灵活多变(类似json)，不同传感器的数据格式不一致，适合用json,支持图片存储  b)相比一般的 KV 存储，它又具有类似 MySQL 的复杂查询能力， c)支持分布式 内置的傻瓜式高可用和水平扩展机制，物联网的数据量特别大，需要方便扩展；d)Mongodb比较成熟，资源丰富，虽然也有IOT时序数据库比如InfluxDB，但是不够成熟容易采坑；
+mongodb community version install: https://docs.mongodb.com/manual/tutorial/install-mongodb-on-ubuntu/
+
+5.网关: Nginx, Tengine, 后端架构设计一般是Nginx + Tomcat, Nginx用来做静态服务器和负载均衡，TomCat做动态资源服务器，里面运行Servet;
+6.物联网协议: MQTT, CoAP,  其中，MQTT传输binary data,  基于TCP协议，设备之间都是通过 消息中间件来通信（发布订阅消息）,设备之间不直接通信；
+CoAP(constrainedApplicationProtocol)是类似HTTP协议的web协议，但是基于UDP协议，Client可以发PUT/GET/POST/DELETE给Server, CoAP也支持RestfulAPI;
+LWm2m: 基于CoAP的协议，中间是基于CoAP的LWM2M协议实现，最上层是在LWM2M协议里面使用的资源模型，用于对传感器数据进行标识。
+https://blog.csdn.net/xinghuanmeiying/article/details/79297889  LwM2m协议栈：CoAP--->LwM2M-->Profile(Resource),
+https://www.eclipse.org/community/eclipse_newsletter/2014/february/article2.php  这篇文章介绍了MQTT和CoAP协议；
+MQTT has a client/server model, where every sensor is a client and connects to a server, known as a broker, over TCP.
+wireshark可以清晰的解析LWm2m/Coap协议;
+
+7.在linux上开发的java程序如果要移植到arm上运行，只要JDK版本和ARM上的一致就可以；
+8.物联网模拟工具： 南向: OMA LWM2M DevKit, 一个firefox浏览器插件，模拟lwm2m client;  北向：SoapUI-5.4.0 or Postman,模拟发送Register,Observe消息(Restful消息); 中间是Impact平台;北向Server发给impact平台的主要消息有2个：register + observe, register的目的是把callback server告诉impact, 后续impact会把observe结果都发给callback server; 
+9.Swig工具: 使得 python调用C++程序；
+10.<<Managing IoT devices with the LWM2M protocol.pdf>>这篇文章非常精彩的介绍了lwm2m架构，我们的系统基本上就符合这个架构; （https://www.arm.com/files/event/2016_ATS_India_B4_Mikko_Saarnivala.pdf）
+11.在线根据URL查询ip ：  https://ipinfo.info/html/ip_checker.php  可以查询 http://leshan.eclipse.org 的ip地址，把这个ip用作lwm2m server,  然后调试本地的lwm2m client;
+15.Leshan的在线lwm2m server:  http://leshan.eclipse.org/#/clients  , 可用来调试本地的lwm2m client，提供read/write/observe功能，界面化操作， 免费使用；
+16.中国移动物联网平台: oneNet;
+17.单机内进程间通信用unix socket && dataGram, 不需要bind port, 只需要约定一个filename, 通信数据格式分2种(字符格式和二进制格式)，字符格式主要是JSON/XML， 二进制的优点是效率高，缺点是依赖于系统（可以显示约定如果解析，比如protobuff），字符格式的优点是与系统无关，也不用考虑字节序。 unix socket也分为socket_stream和socket_DGram, 一个是字节流（优点是不会截断，大小任意，缺点是不知道哪里是开始和结束，需要应用层去提取消息），一个是数据报（优点是每次都获取到一个完整消息，缺点是报文超过门限就会被截断）；
+
+19.java可以调用shell, 蓝牙，LTE等都是通过java调用shell脚本开启的；
+20.json: 虽然中括号用于嵌套表达更可视化,但如果用 C语言开源库cJSON来解析json的话，序列化时最好不要用[],  只用{}， 因为花括号代表更少嵌套，这样解析代码可以更少嵌套循环层数;
+https://github.com/DaveGamble/cJSON  open source cJSON lib, easy to use, just download two file: cJSON.c/cJSON.h;  
+https://jsoneditoronline.org/   在线JSON格式转换
+21.LTE芯片启动： pppd call quectel-ppp &
+22.C/C++代码调用外部程序（command, script, other bin）有3种方式：system, popen, fork+exec,  其中system/popen是阻塞的，都是高层封装，底层都是调用的fork+exec; 
+refer to: http://5eonline.com/en/4-easy-ways-to-run-external-programs-in-cc/
+int status = system(const char *command);//WIFEXITED; 自动配对蓝牙就是用的这个来调用脚本, C程序可以通过WEXITSTATUS(status) 可以获取脚本的执行结果：成功还是失败，然后处理；
+
+23.交互式shell中需要用到expect, 在linux中默认没有，蓝牙自动配对需要交互式输入，     expect 移植到ARM; 因为yocto自带了expect.bb，所以只需要在sensor-image-minimal.bb中的IMAGE_INSTALL_APPEND+= expect;这样就会把expect打包到镜像包；
+24.如果要移植某个工具到ARM，最佳办法是下看看Yocto工程中是否可以直接编译（如果存在.bb文件就可以），而不是单独使用crosscompiletoolchain去编译，有CMakeList还好，没有的话修改makefile很麻烦，bb文件可以包含其它的bb文件；
+25.进程开机启动： 在目录 /lib/systemd/system/下面建立1个test.service文件，然后 systemctl enable test , 这个命令会自动创建1个link文件到/etc/systemd/system/multi-user.target/（因为systemd默认从target目录读取需要开机启动的服务） ; 然后用 systemctl start test.service 测试一下; 
+26.嵌入式GUI开发用QT 或者 webUI;
+27.在嵌入式系统中，用wget下载文件(eg: wget http://xx.xx.xx.xx/file_path;   用curl 上传文件 ; 只要在程序中调用这些命令的脚本就可以了；不过要在文件服务器启动http service(一般用nginx)并设置root目录;
+28.如果要自己快速的开发后端服务器，且项目规模不大的话，可以用php或者NodeJs;
+29.视频输出的时候发现有剧烈抖动的问题，因为帧乱序导致，输出时没有排序；
+30.嵌入式系统中的应用采用微服务的方式开发：涉及N个服务，每个进程只做1件事，比如蓝牙自动配对，固件程序下载升级， lwm2mclient上报， OBD汽车数据采集, 秒秒测温，GPS测量，湿度测量；
+31.蓝牙自动配对：本来想通过信号强度的方式来选择obd device, 但是测试发现bluetoothctl扫描到的RSSI变化太大，在1次扫描过程中同一个obd的RSSI会出现好多次且变化很大，不同的obd的RSSI并没有明显的区别，所以靠信号强度来区分的可能性不大，最终方案是通过配置下发的方式，把obd的地址通过lwm2m协议告诉给EdgeGateway, 然后写入Flash. bluetooth-daemon进程直接从文件里面读取（蓝牙配对是通过脚本实现的）;
+32.芯片的工作温度范围要是消费级别的，特别是要耐高温；
+33.HDMI输出视频，只要把图片数据写入bufferframe即可（通过mmap把bufferframe映射到内存）；
+34.lwm2mserver url动态变更： 先把新的URL通过lwm2m write 到client, client写入文件系统，然后exit终止进程，因为client是个Deamon service, 设置了自动重启，下次启动时就可以使用新的url了；
+35.嵌入式里面的程序如果要把Log输出到串口，需要改写实现os_printf()函数 ??
+36.时钟同步命令(ntpdate), 服务器可以设置为中国国家授时中心的IP，linux设备上网后会自动连上同步服务器进行时钟同步, ln -sf /usr/share/zoneinfo/Asia/Hong_Kong /etc/localtime；
+37.时序数据库：InfluxDB开源，单机免费，集群要收费，所以项目中用的是Mongodb, 也可以考虑开源的KairosDB时序数据库（基于cassandra），支持集群；
+https://resources.mongodb.com/internet-of-things/mongodb-and-iot-jan-10-2018    Mongodb应用于IOT的官方实践，现在项目中参考了这个做法;
+38.每个CPU都有1个watchdog, 如果cpu死循环了，那watchdog可以检测到并触发进程core dump;
+39.项目中的一代盒子CPU: i.MX6 Quad/DualLite, 4核， ARMv7，第2代盒子2核，可以 cat /proc/cpuinfo 看到； 
+40.交叉编译： 先要安装芯片对应的交叉编译工具，然后写个脚本，执行脚本设置相关的环境变量，比如修改CXX，如果是CMakeLists.txt则需要设置变量CMAKE_FIND_ROOT_PATH=arm-poky-linux-geneabi,  ,CMAKE_CXX_COMPILE=arm-poky-linux-genuabi-g++;
+41.芯片选型： 对于CPU系列的选型要能做到Pin2Pin兼容，便于升级和成本控制，支持的接口要满足需求(UART, USB, Ethenet, Bluetooth, HDMI, wifi, zigbee, 6lowpan)，图像处理能力(GPU,Encode,Decode)，安全性（支付行业要求高），还有功耗及工作环境（比如工业级，消费级），芯片成熟度（广泛使用的，不要是刚推出的 ），售后技术支持；
+
+
+
